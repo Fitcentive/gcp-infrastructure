@@ -1,0 +1,39 @@
+image:
+  repository: ${KEYCLOAK_SERVER_IMAGE}
+  tag: "1.0"
+
+postgresql:
+  # Disable PostgreSQL dependency
+  enabled: false
+
+extraContainers: |
+  - name: cloudsql-proxy
+    image: gcr.io/cloudsql-docker/gce-proxy:1.33.1
+    command:
+      - /cloud_sql_proxy
+      - -instances=${GCP_CLOUD_SQL_INSTANCE}:=tcp:5432
+      - -credential_file=/secrets/cloudsql/credentials.json
+    volumeMounts:
+      - name: cloudsql-creds
+        mountPath: /secrets/cloudsql
+        readOnly: true
+
+extraVolumes: |
+  - name: cloudsql-creds
+    secret:
+      secretName: ${KEYCLOAK_CLOUDSQL_INSTANCE_SECRET}
+
+# PROXY_ADDRESS_FORWARDING is required for Apple keycloak provider to work
+extraEnv: |
+  - name: PROXY_ADDRESS_FORWARDING
+    value: "true"
+  - name: DB_VENDOR
+    value: postgres
+  - name: DB_ADDR
+    value: "localhost"
+  - name: DB_PORT
+    value: "5432"
+
+extraEnvFrom: |
+  - secretRef:
+      name: ${KEYCLOAK_CLOUDSQL_DATABASE_SECRET}

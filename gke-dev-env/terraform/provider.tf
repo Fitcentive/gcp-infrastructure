@@ -12,6 +12,10 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "~> 2.15"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.4"
+    }
   }
 
   backend "gcs" {
@@ -30,16 +34,24 @@ data "terraform_remote_state" "tf_remote_state_dev" {
   }
 }
 
+data "google_client_config" "default" {}
+
 provider "google" {
   project = local.project_id
   region  = local.region
 }
 
+# do we have to actually split into parent-child projects!?
 provider "kubernetes" {
-  load_config_file = "false"
-  host             = data.terraform_remote_state.tf_remote_state_dev.outputs.kubernetes_cluster_host
-
-  client_certificate     = base64decode(data.terraform_remote_state.tf_remote_state_dev.outputs.kubernetes_client_cert)
-  client_key             = base64decode(data.terraform_remote_state.tf_remote_state_dev.outputs.kubernetes_client_key)
+  host                   = "https://${data.terraform_remote_state.tf_remote_state_dev.outputs.kubernetes_cluster_host}"
+  token                  = data.google_client_config.default.access_token
   cluster_ca_certificate = base64decode(data.terraform_remote_state.tf_remote_state_dev.outputs.kubernetes_cluster_ca_certificate)
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = "https://${data.terraform_remote_state.tf_remote_state_dev.outputs.kubernetes_cluster_host}"
+    token                  = data.google_client_config.default.access_token
+    cluster_ca_certificate = base64decode(data.terraform_remote_state.tf_remote_state_dev.outputs.kubernetes_cluster_ca_certificate)
+  }
 }
