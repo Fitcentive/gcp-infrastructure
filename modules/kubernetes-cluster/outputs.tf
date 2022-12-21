@@ -1,10 +1,10 @@
 output "region" {
-  value       = local.region
+  value       = var.region
   description = "GCloud Region"
 }
 
 output "project_id" {
-  value       = local.project_id
+  value       = var.project_id
   description = "GCloud Project ID"
 }
 
@@ -29,8 +29,6 @@ output "kubernetes_cluster_ca_certificate" {
   description = "GKE Cluster CA Certificate"
   sensitive   = true
 }
-
-
 
 output "kubernetes_cluster_host" {
   value       = google_container_cluster.primary.endpoint
