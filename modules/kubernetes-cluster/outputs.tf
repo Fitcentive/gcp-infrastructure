@@ -34,3 +34,13 @@ output "kubernetes_cluster_host" {
   value       = google_container_cluster.primary.endpoint
   description = "GKE Cluster Host"
 }
+
+output "gke_static_ip_name" {
+  value = google_compute_global_address.global-static-ip.name
+  description = "GKE Static IP name"
+}
+
+output "gke_static_ip_address" {
+  value = google_compute_global_address.global-static-ip.address
+  description = "GKE Static IP address"
+}

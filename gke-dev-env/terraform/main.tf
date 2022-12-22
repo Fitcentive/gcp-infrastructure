@@ -73,6 +73,8 @@ module "dev-keycloak-server" {
   cloud_sql_instance_username  = module.cloudsql-dev-env.cloudsql_instance_username
   cloudsql_service_account_key = module.cloudsql-dev-env.cloudsql_service_account_key
 
+  global_static_ip_name = module.gke-dev-env.gke_static_ip_name
+
   depends_on = [
     module.gke-dev-env,
     module.cloudsql-dev-env,

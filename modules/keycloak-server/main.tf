@@ -76,3 +76,32 @@ resource "helm_release" "keycloak" {
     null_resource.push_custom_keycloak_docker_image_to_gcr
   ]
 }
+
+resource "kubernetes_ingress_v1" "keycloak-ingress" {
+  metadata {
+    name = "keycloak-ingress"
+    annotations = {
+      "kubernetes.io/ingress.global-static-ip-name" = var.global_static_ip_name
+    }
+    namespace = var.namespace
+  }
+
+  spec {
+    rule {
+      http {
+        path {
+          path = "/auth"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "${var.namespace}-service-http"
+              port {
+                number = 80
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

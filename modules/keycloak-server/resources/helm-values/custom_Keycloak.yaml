@@ -37,3 +37,6 @@ extraEnv: |
 extraEnvFrom: |
   - secretRef:
       name: ${KEYCLOAK_CLOUDSQL_DATABASE_SECRET}
+
+service:
+  type: NodePort

@@ -45,3 +45,7 @@ variable "cloud_sql_instance_password" {
 variable "cloudsql_service_account_key" {
   description = "Base64 version of service account key file for CloudSql"
 }
+
+variable "global_static_ip_name" {
+  description = "Global Static External IP name"
+}
