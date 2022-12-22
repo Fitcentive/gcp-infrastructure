@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = ">= 1.7.0"
+    }
+  }
+}
+
 # Create and push custom keycloak docker image with Apple SSO provider to GCR
 resource "null_resource" "push_custom_keycloak_docker_image_to_gcr" {
   provisioner "local-exec" {
@@ -77,11 +86,28 @@ resource "helm_release" "keycloak" {
   ]
 }
 
+# Note - YAML not in separate file so that ssl policy can be interpolated in TF
+resource "kubectl_manifest" "keycloak-ingress-gcp-frontend-config" {
+  yaml_body = <<YAML
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: ${var.namespace}-ingress-frontend-config
+  namespace: ${var.namespace}
+spec:
+  sslPolicy: ${var.ssl_policy_name}
+  redirectToHttps:
+    enabled: true
+    responseCodeName: MOVED_PERMANENTLY_DEFAULT
+YAML
+}
+
 resource "kubernetes_ingress_v1" "keycloak-ingress" {
   metadata {
-    name = "keycloak-ingress"
+    name = "${var.namespace}-ingress"
     annotations = {
       "kubernetes.io/ingress.global-static-ip-name" = var.global_static_ip_name
+      "networking.gke.io/v1beta1.FrontendConfig" = "${var.namespace}-ingress-frontend-config"
     }
     namespace = var.namespace
   }
@@ -104,4 +130,8 @@ resource "kubernetes_ingress_v1" "keycloak-ingress" {
       }
     }
   }
+
+  depends_on = [
+    kubectl_manifest.keycloak-ingress-gcp-frontend-config
+  ]
 }

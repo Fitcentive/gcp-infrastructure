@@ -16,6 +16,10 @@ terraform {
       source  = "hashicorp/random"
       version = "~> 3.4"
     }
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = ">= 1.7.0"
+    }
   }
 
   backend "gcs" {
@@ -43,6 +47,13 @@ provider "google" {
 
 # do we have to actually split into parent-child projects!?
 provider "kubernetes" {
+  host                   = "https://${data.terraform_remote_state.tf_remote_state_dev.outputs.kubernetes_cluster_host}"
+  token                  = data.google_client_config.default.access_token
+  cluster_ca_certificate = base64decode(data.terraform_remote_state.tf_remote_state_dev.outputs.kubernetes_cluster_ca_certificate)
+}
+
+provider "kubectl" {
+  load_config_file       = false
   host                   = "https://${data.terraform_remote_state.tf_remote_state_dev.outputs.kubernetes_cluster_host}"
   token                  = data.google_client_config.default.access_token
   cluster_ca_certificate = base64decode(data.terraform_remote_state.tf_remote_state_dev.outputs.kubernetes_cluster_ca_certificate)

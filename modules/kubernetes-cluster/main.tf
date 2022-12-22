@@ -18,6 +18,12 @@ resource "google_compute_global_address" "global-static-ip" {
   name = "${var.project_id}-gke-static-ip"
 }
 
+# SSL policy for LBs
+resource "google_compute_ssl_policy" "primary-ssl-policy" {
+  name    = "${var.project_id}-ssl-policy"
+  profile = "MODERN"
+}
+
 # GKE cluster
 resource "google_container_cluster" "primary" {
   name     = "${var.project_id}-gke"

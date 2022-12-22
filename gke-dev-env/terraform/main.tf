@@ -74,6 +74,7 @@ module "dev-keycloak-server" {
   cloudsql_service_account_key = module.cloudsql-dev-env.cloudsql_service_account_key
 
   global_static_ip_name = module.gke-dev-env.gke_static_ip_name
+  ssl_policy_name       = module.gke-dev-env.gke_ssl_policy_name
 
   depends_on = [
     module.gke-dev-env,

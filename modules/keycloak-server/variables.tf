@@ -49,3 +49,7 @@ variable "cloudsql_service_account_key" {
 variable "global_static_ip_name" {
   description = "Global Static External IP name"
 }
+
+variable "ssl_policy_name" {
+  description = "GKE SSL policy name"
+}
