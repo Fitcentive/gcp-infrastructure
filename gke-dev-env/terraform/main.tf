@@ -13,12 +13,6 @@ resource "google_storage_bucket" "terraform-remote-state-bucket" {
 # Container registry
 resource "google_container_registry" "gke-dev-env" {}
 
-# Random service secret for use later
-resource "random_string" "service_secret" {
-  length           = 16
-  special          = false
-}
-
 module "cloudsql-dev-env" {
   source = "../../modules/cloudsql"
 
@@ -37,6 +31,22 @@ module "gke-dev-env" {
   zone       = local.zone
 }
 
+module "gke-dev-functional-namespaces" {
+  source = "../../modules/kubernetes-namespaces"
+
+  kubernetes_namespaces = local.functional_namespaces
+}
+
+module "gke-dev-shared-secrets" {
+  source = "../../modules/kubernetes-shared-secrets"
+
+  kubernetes_namespaces = local.functional_namespaces
+
+  depends_on = [
+    module.gke-dev-functional-namespaces
+  ]
+}
+
 # K8s Keycloak server deployment
 module "dev-keycloak-server" {
   source = "../../modules/keycloak-server"
@@ -53,7 +63,7 @@ module "dev-keycloak-server" {
 
   depends_on = [
     module.gke-dev-env,
-    module.cloudsql-dev-env
+    module.cloudsql-dev-env,
   ]
 }
 
@@ -66,6 +76,14 @@ module "dev-mailhog-server" {
   depends_on = [
     module.gke-dev-env
   ]
+}
+
+
+# ------------------------------------------------------------------------
+# Random service secret for use between image-service and image-proxy
+resource "random_string" "service_secret" {
+  length           = 16
+  special          = false
 }
 
 module "dev-image-server" {
@@ -83,3 +101,4 @@ module "dev-image-proxy-server" {
   region         = local.region
   service_secret = random_string.service_secret.result
 }
+# ------------------------------------------------------------------------
