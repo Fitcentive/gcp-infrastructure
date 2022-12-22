@@ -50,3 +50,14 @@ module "dev-keycloak-server" {
     module.cloudsql-dev-env
   ]
 }
+
+module "dev-mailhog-server" {
+  source = "../../modules/mailhog"
+
+  project_id = local.project_id
+  region     = local.region
+
+  depends_on = [
+    module.gke-dev-env
+  ]
+}
