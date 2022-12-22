@@ -13,6 +13,12 @@ resource "google_storage_bucket" "terraform-remote-state-bucket" {
 # Container registry
 resource "google_container_registry" "gke-dev-env" {}
 
+# Random service secret for use later
+resource "random_string" "service_secret" {
+  length           = 16
+  special          = false
+}
+
 module "cloudsql-dev-env" {
   source = "../../modules/cloudsql"
 
@@ -60,4 +66,20 @@ module "dev-mailhog-server" {
   depends_on = [
     module.gke-dev-env
   ]
+}
+
+module "dev-image-server" {
+  source = "../../modules/core-services/go-image-server"
+
+  project_id     = local.project_id
+  region         = local.region
+  service_secret = random_string.service_secret.result
+}
+
+module "dev-image-proxy-server" {
+  source = "../../modules/core-services/go-image-proxy"
+
+  project_id     = local.project_id
+  region         = local.region
+  service_secret = random_string.service_secret.result
 }
