@@ -39,3 +39,13 @@ output "cloudsql_database_instance_connection" {
   value       = module.cloudsql-dev-env.cloudsql_instance_connection_name
   description = "GCP Cloud SQL DB instance connection name"
 }
+
+output "gke_static_ip_name" {
+  value       = module.gke-dev-env.gke_static_ip_name
+  description = "GKE Static IP name"
+}
+
+output "gke_static_ip_address" {
+  value       = module.gke-dev-env.gke_static_ip_address
+  description = "GKE Static IP address"
+}

@@ -35,6 +35,10 @@ module "gke-dev-functional-namespaces" {
   source = "../../modules/kubernetes-namespaces"
 
   kubernetes_namespaces = local.functional_namespaces
+
+  depends_on = [
+    module.gke-dev-env
+  ]
 }
 
 module "gke-dev-shared-secrets" {
@@ -46,6 +50,14 @@ module "gke-dev-shared-secrets" {
     module.gke-dev-functional-namespaces
   ]
 }
+
+# Avoiding NGINX controller for now as there seems to be no easy way to bind to Static IP
+#module "dev-nginx-ingress-controller" {
+#  source = "../../modules/nginx-ingress-controller"
+#
+#  project_id = local.project_id
+#  region     = local.region
+#}
 
 # K8s Keycloak server deployment
 module "dev-keycloak-server" {
