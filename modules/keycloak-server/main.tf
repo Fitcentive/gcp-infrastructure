@@ -108,6 +108,8 @@ resource "kubernetes_ingress_v1" "keycloak-ingress" {
     annotations = {
       "kubernetes.io/ingress.global-static-ip-name" = var.global_static_ip_name
       "networking.gke.io/v1beta1.FrontendConfig" = "${var.namespace}-ingress-frontend-config"
+      "networking.gke.io/managed-certificates" = "${var.namespace}-ingress-managed-certificate"
+      "kubernetes.io/ingress.class" = "gce"
     }
     namespace = var.namespace
   }
@@ -134,4 +136,17 @@ resource "kubernetes_ingress_v1" "keycloak-ingress" {
   depends_on = [
     kubectl_manifest.keycloak-ingress-gcp-frontend-config
   ]
+}
+
+resource "kubectl_manifest" "keycloak-ingress-managed-certificate" {
+  yaml_body = <<YAML
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: ${var.namespace}-ingress-managed-certificate
+  namespace: ${var.namespace}
+spec:
+  domains:
+    - fitcentive.xyz
+YAML
 }
