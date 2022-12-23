@@ -41,8 +41,8 @@ module "gke-dev-functional-namespaces" {
   ]
 }
 
-module "gke-dev-shared-secrets" {
-  source = "../../modules/kubernetes-shared-secrets"
+module "gke-dev-shared-resources" {
+  source = "../../modules/kubernetes-shared-resources"
 
   kubernetes_namespaces = local.functional_namespaces
 
