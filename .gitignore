@@ -57,5 +57,5 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-terraform_service_account.json
+gke-dev-env/resources/terraform_service_account.json
 
