@@ -49,3 +49,8 @@ output "gke_static_ip_address" {
   value       = module.gke-dev-env.gke_static_ip_address
   description = "GKE Static IP address"
 }
+
+output "firebase_firestore_database_url" {
+  value = module.dev-firebase-project.firestore_database_url
+  description = "Firebase firestore database URL"
+}

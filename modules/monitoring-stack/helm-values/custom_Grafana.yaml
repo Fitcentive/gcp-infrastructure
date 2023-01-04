@@ -1,0 +1,121 @@
+#-------------------------------------------------------------------------------------
+# helm values for kube-prometheus-stack, section specific to Grafana
+# most values are default, just repeated for clarity
+# - kube-prometheus-stack: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
+#
+# - kube-prometheus-stack default helm values does not list all values related to Grafana helm chart
+#   https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
+#-------------------------------------------------------------------------------------
+
+grafana:
+  ## Grafana's primary configuration
+  ## NOTE: values in map will be converted to ini format
+  ## ref: http://docs.grafana.org/installation/configuration/
+  ##
+  plugins: []
+
+  grafana.ini:
+    smtp:
+      enabled: false
+    dashboards:
+      default_home_dashboard_path: /tmp/dashboards/default.json # default dashboard to be default.json loaded by the sidecar
+    users:
+      default_theme: light
+
+  # Sidecars that collect the ConfigMaps with specified label and stores the included files them into the respective folders
+  sidecar:
+    dashboards:
+      enabled: true
+      # label key that the ConfigMaps containing dashboards should have to be collected by the sidecar
+      # The value is unused, the ConfigMap could be labelled as:
+      # label:
+      #   grafana_dashboard: "1"
+      label: grafana_dashboard
+
+      annotations:
+        # when dashboards.annotations.grafana_folder is UNDEFINED: all the dashboards will be created in Grafana "General" directory
+        # by default the built-in dashboards for kube-prometheus-stack are designed for kube-state-metrics
+        # https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack/templates/grafana/dashboards-1.14
+        # it is more elegant to place those dashboards in a properly named Grafana dashboard folder
+        # the annotation below will be added to each dashboard ConfigMap created by kube-prometheus-stack helm chart
+        # Example: https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/templates/grafana/dashboards-1.14/kubelet.yaml#L14
+        # This requires to set the helm value 'grafana.sidecar.dashboards.folderAnnotation: grafana_folder'
+        grafana_folder: "KUBE-STATE-METRICS"
+
+      # folder in the Grafana container where the collected dashboards are stored (unless `defaultFolderName` is set)
+      folder: /tmp/dashboards
+
+      # "grafana_folder" is the annotation key which must be set in the ConfigMap defining the dashboards.
+      # In the example below the CM has annotations.grafana_folder: "KAFKA"
+      # which means all the dashboards defined in the CM would be stored
+      # - in /tmp/dashboards/KAFKA on the Filesystem of the Grafana container
+      #   "/tmp/dashboards" is defined in grafana.sidecar.dashboards.folder
+      #   "KAFKA" is the custom folder defined in the ConfigMap along with dashboard definitions
+      # - the dashboards are visible in the Grafana UI under the "KAFKA" dashboard folder
+      #
+      #   apiVersion: v1
+      #   kind: ConfigMap
+      #   metadata:
+      #     name: ...
+      #     namespace: ...
+      #     labels:
+      #       app: ...
+      #       grafana_dashboard: "1"
+      #     annotations:
+      #       grafana_folder: "KAFKA"
+      #   data:
+      #      dashboard1.json:
+      #         json code of dashboard1
+      #      dashboard2.json:
+      #         json code of dashboard2
+      folderAnnotation: grafana_folder
+
+      provider:
+        # allow updating provisioned dashboards from the UI
+        allowUiUpdates: true
+
+        # MANDATORY when grafana.sidecar.dashboards.folderAnnotation is defined
+        # 'true' = allow Grafana to replicate dashboard structure from filesystem, ie
+        # - create a subdir in the File system and store the *.json files of the dashboards
+        #   the json code and the subdir name are defined in the ConfigMap of the dashboards
+        #   see example in comment section of grafana.sidecar.dashboards.folderAnnotation
+        # AND
+        # - In Grafana UI, place the dashboards defined in the ConfigMap (CM)
+        #   in a dashboard folder with a name specified in the CM annotation `grafana_folder: ???`
+        foldersFromFilesStructure: true
+    datasources:
+      # true  = (default) add the Prometheus service created by kube-prometheus-stack and set it as default datasource
+      # false = allow additionalDataSources, in particular to switch the default DS
+      #         to a different DS than the Prometheus from kube-prometheus-stack
+      defaultDatasourceEnabled: false
+      #url: http://${HELM_KUBEPROMSTACK_RELEASE_NAME}-prometheus.${KUBEPROMSTACK_NAMESPACE}:9090/
+
+  additionalDataSources:
+    - name: KubePromStack
+      type: prometheus
+      access: proxy
+      url: http://${HELM_KUBEPROMSTACK_RELEASE_NAME}-prometheus.${KUBEPROMSTACK_NAMESPACE}:9090/
+      isDefault: false
+
+  # IMPORTANT: by default the `kube-prometheus-stack` set a weak pwd
+  # overriding with empty string (or null) indicates to the Grafana helm chart to generate a random pwd
+  # (stored in `kubectl get secret <helmReleaseName>-grafana -n monitoring`)
+  # this value could be overridden by `helm install ... --set grafana.adminPassword=<your own pwd here>`
+  adminPassword: null
+
+  # valid TZ values: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  defaultDashboardsTimezone: 'America/Toronto' # default = utc
+
+  persistence:
+    enabled: enabled
+    type: pvc
+    storageClassName: standard-rwo
+    size: 5Gi
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: 250m
+      memory: 1Gi

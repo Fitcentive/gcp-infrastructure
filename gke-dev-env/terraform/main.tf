@@ -1,3 +1,4 @@
+# Note - GCP project was created manually in the console UI
 # Terraform state bucket
 # Might have to tf import separately
 resource "google_storage_bucket" "terraform-remote-state-bucket" {
@@ -34,7 +35,7 @@ module "gke-dev-env" {
 module "gke-dev-functional-namespaces" {
   source = "../../modules/kubernetes-namespaces"
 
-  kubernetes_namespaces = local.functional_namespaces
+  kubernetes_namespaces = local.service_namespaces
 
   depends_on = [
     module.gke-dev-env
@@ -44,10 +45,20 @@ module "gke-dev-functional-namespaces" {
 module "gke-dev-shared-resources" {
   source = "../../modules/kubernetes-shared-resources"
 
-  kubernetes_namespaces = local.functional_namespaces
+  service_namespaces = local.service_namespaces
+  certificate_namespaces = local.certificate_namespaces
 
   depends_on = [
     module.gke-dev-functional-namespaces
+  ]
+}
+
+# Could enable prometheus/grafana via publicURLs with additional config if needed
+module "dev-monitoring-stack" {
+  source = "../../modules/monitoring-stack"
+
+  depends_on = [
+    module.gke-dev-env
   ]
 }
 
@@ -107,6 +118,10 @@ module "dev-image-server" {
   project_id     = local.project_id
   region         = local.region
   service_secret = random_string.service_secret.result
+
+  depends_on = [
+    module.gke-dev-env
+  ]
 }
 
 module "dev-image-proxy-server" {
@@ -115,5 +130,9 @@ module "dev-image-proxy-server" {
   project_id     = local.project_id
   region         = local.region
   service_secret = random_string.service_secret.result
+
+  depends_on = [
+    module.gke-dev-env
+  ]
 }
 # ------------------------------------------------------------------------

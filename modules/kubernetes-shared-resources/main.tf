@@ -15,7 +15,7 @@ resource "random_string" "internal-service-secret" {
 }
 
 resource "kubernetes_secret" "internal-service-secret" {
-  for_each = toset(var.kubernetes_namespaces)
+  for_each = toset(var.service_namespaces)
 
   metadata {
     name = "internal-service-secret"
@@ -26,8 +26,9 @@ resource "kubernetes_secret" "internal-service-secret" {
   }
 }
 
+# Create certificates for those namespaces that require it
 resource "kubectl_manifest" "k8s-gce-ingress-managed-certificate" {
-  for_each = toset(var.kubernetes_namespaces)
+  for_each = toset(var.certificate_namespaces)
 
   yaml_body = <<YAML
 apiVersion: networking.gke.io/v1
@@ -37,6 +38,6 @@ metadata:
   namespace: ${each.key}
 spec:
   domains:
-    - fitcentive.xyz
+    - auth.fitcentive.xyz
 YAML
 }

@@ -35,6 +35,13 @@ resource "google_container_cluster" "primary" {
   remove_default_node_pool = true
   initial_node_count       = 1
 
+  addons_config {
+    gce_persistent_disk_csi_driver_config {
+      enabled = true
+    }
+  }
+
+
   network    = google_compute_network.vpc.name
   subnetwork = google_compute_subnetwork.subnet.name
 }
