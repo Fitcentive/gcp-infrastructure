@@ -57,5 +57,5 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-*service_account.json
+terraform_service_account.json
 
