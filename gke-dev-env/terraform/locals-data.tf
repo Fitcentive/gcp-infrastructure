@@ -14,6 +14,7 @@ locals {
     "notification",
     "user",
     "social",
+    "public-gateway",
   ]
 
   # These are those namespaces that require a google-managed certificate to be generated

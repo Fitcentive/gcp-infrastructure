@@ -132,3 +132,23 @@ module "dev-image-proxy-server" {
   ]
 }
 # ------------------------------------------------------------------------
+
+# Create service-account and everything else needed for notification service
+module "dev-notification-service" {
+  source = "../../modules/core-services/notification-service"
+
+  project_id = local.project_id
+  firebase_database_url = module.dev-firebase-project.firestore_database_url
+  cloud_sql_instance_name = module.cloudsql-dev-env.cloudsql_instance_name
+
+  # Note - the following value is fetched from https://console.firebase.google.com/u/1/project/place-2-meet-dev/settings/serviceaccounts/adminsdk
+  # This value is created when `module.dev-firebase-project` is executed successfully
+  # Refer to the README.adoc for more info on how to set this value appropriately
+  firebase_admin_service_account = "firebase-adminsdk-j7w3s"
+
+  depends_on = [
+    module.gke-dev-functional-namespaces,
+    module.dev-firebase-project,
+  ]
+
+}
