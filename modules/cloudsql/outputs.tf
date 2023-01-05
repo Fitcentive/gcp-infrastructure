@@ -22,5 +22,5 @@ output "cloudsql_instance_username" {
 output "cloudsql_service_account_key" {
   value       = google_service_account_key.cloudsql-service-account-key.private_key
   description = "Cloud SQL Service account key"
-  sensitive = true
+  sensitive   = true
 }

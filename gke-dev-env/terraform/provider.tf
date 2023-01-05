@@ -23,6 +23,7 @@ terraform {
   }
 
   backend "gcs" {
+    # See nonproduction/terraform/outputs for info on this
     bucket  = "p2m-tf-state-dev"
     prefix  = "terraform/state"
   }
@@ -43,9 +44,15 @@ data "google_client_config" "default" {}
 provider "google" {
   project = local.project_id
   region  = local.region
+  credentials = file("../resources/terraform_service_account.json")
 }
 
-# do we have to actually split into parent-child projects!?
+provider "google-beta" {
+  project = local.project_id
+  region  = local.region
+  credentials = file("../resources/terraform_service_account.json")
+}
+
 provider "kubernetes" {
   host                   = "https://${data.terraform_remote_state.tf_remote_state_dev.outputs.kubernetes_cluster_host}"
   token                  = data.google_client_config.default.access_token

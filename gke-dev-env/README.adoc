@@ -1,0 +1,8 @@
+= GKE DEV Environment
+
+=== Notes
+
+1. `nonproduction` project must be run before running `gke-dev-env`
+2. After doing `tf apply` in `nonproduction`, update the contents of `resources/terraform_service_account.json` with the contents of `terraform output -raw tf_service_account_private_key | base64 --decode`
+    - `terraform output -raw tf_service_account_private_key | base64 --decode > ../../gke-dev-env/resources/terraform_service_account.json`
+3. This is the service account identity that the `google` terraform provider will now assume

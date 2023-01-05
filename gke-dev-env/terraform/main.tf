@@ -1,18 +1,14 @@
 # Note - GCP project was created manually in the console UI
-# Terraform state bucket
-# Might have to tf import separately
-resource "google_storage_bucket" "terraform-remote-state-bucket" {
-  name          = "p2m-tf-state-dev"
-  force_destroy = false
-  location      = local.region
-  storage_class = "STANDARD"
-  versioning {
-    enabled = true
-  }
-}
 
 # Container registry
 resource "google_container_registry" "gke-dev-env" {}
+
+module "dev-firebase-project" {
+  source = "../../modules/firebase"
+
+  project_id = local.project_id
+  default_location = local.firebase_location
+}
 
 module "cloudsql-dev-env" {
   source = "../../modules/cloudsql"
