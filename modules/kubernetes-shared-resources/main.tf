@@ -18,7 +18,7 @@ resource "kubernetes_secret" "internal-service-secret" {
   for_each = toset(var.service_namespaces)
 
   metadata {
-    name = "internal-service-secret"
+    name      = "internal-service-secret"
     namespace = each.key
   }
   data = {

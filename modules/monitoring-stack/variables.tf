@@ -1,4 +1,4 @@
-variable pwd_special_char_subset {
+variable "pwd_special_char_subset" {
   type        = string
   description = "Kubernetes Namespaces between which secrets are shared"
   default     = "~%?^,.;*()-_=+"
@@ -11,8 +11,8 @@ variable "kube_monitoring_namespace" {
 }
 
 variable "helm_kubepromstack_releasename" {
-  type    = string
-  default = "kubepromstack"
+  type        = string
+  default     = "kubepromstack"
   description = "Release name"
 }
 

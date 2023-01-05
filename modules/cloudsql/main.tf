@@ -8,7 +8,7 @@ resource "google_sql_database_instance" "gke-dev-env-cloud-sql-instance" {
     tier = "db-f1-micro"
   }
 
-  deletion_protection  = "true"
+  deletion_protection = "true"
 }
 
 resource "random_password" "pwd" {
@@ -33,7 +33,7 @@ resource "google_service_account_key" "cloudsql-service-account-key" {
 }
 
 resource "google_project_iam_member" "cloudsql-service-account-iam-member" {
-  project            = var.project_id
-  role               = "roles/cloudsql.client"
-  member             = "serviceAccount:${google_service_account.cloudsql-service-account.email}"
+  project = var.project_id
+  role    = "roles/cloudsql.client"
+  member  = "serviceAccount:${google_service_account.cloudsql-service-account.email}"
 }

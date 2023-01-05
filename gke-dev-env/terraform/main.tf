@@ -6,7 +6,7 @@ resource "google_container_registry" "gke-dev-env" {}
 module "dev-firebase-project" {
   source = "../../modules/firebase"
 
-  project_id = local.project_id
+  project_id       = local.project_id
   default_location = local.firebase_location
 }
 
@@ -21,7 +21,7 @@ module "cloudsql-dev-env" {
 # GKE cluster - we might have to move this to a parent resource, as the provider scope references the state which is yet to be created
 # Easy fix, target apply this resource first
 module "gke-dev-env" {
-  source     = "../../modules/kubernetes-cluster"
+  source = "../../modules/kubernetes-cluster"
 
   project_id = local.project_id
   region     = local.region
@@ -41,7 +41,7 @@ module "gke-dev-functional-namespaces" {
 module "gke-dev-shared-resources" {
   source = "../../modules/kubernetes-shared-resources"
 
-  service_namespaces = local.service_namespaces
+  service_namespaces     = local.service_namespaces
   certificate_namespaces = local.certificate_namespaces
 
   depends_on = [
@@ -73,8 +73,8 @@ module "dev-keycloak-server" {
   project_id = local.project_id
   region     = local.region
 
-  cloud_sql_instance_name                 = module.cloudsql-dev-env.cloudsql_instance_name
-  cloud_sql_instance_connection_name      = module.cloudsql-dev-env.cloudsql_instance_connection_name
+  cloud_sql_instance_name            = module.cloudsql-dev-env.cloudsql_instance_name
+  cloud_sql_instance_connection_name = module.cloudsql-dev-env.cloudsql_instance_connection_name
 
   cloud_sql_instance_password  = module.cloudsql-dev-env.cloudsql_instance_password
   cloud_sql_instance_username  = module.cloudsql-dev-env.cloudsql_instance_username
@@ -104,8 +104,8 @@ module "dev-mailhog-server" {
 # ------------------------------------------------------------------------
 # Random service secret for use between image-service and image-proxy
 resource "random_string" "service_secret" {
-  length           = 16
-  special          = false
+  length  = 16
+  special = false
 }
 
 module "dev-image-server" {
@@ -138,7 +138,8 @@ module "dev-notification-service" {
   source = "../../modules/core-services/notification-service"
 
   project_id = local.project_id
-  firebase_database_url = module.dev-firebase-project.firestore_database_url
+  # Note - this output is empty, seems like it need enabling in Firebase console. Perhaps it is not needed though?
+  firebase_database_url   = module.dev-firebase-project.firestore_database_url
   cloud_sql_instance_name = module.cloudsql-dev-env.cloudsql_instance_name
 
   # Note - the following value is fetched from https://console.firebase.google.com/u/1/project/place-2-meet-dev/settings/serviceaccounts/adminsdk

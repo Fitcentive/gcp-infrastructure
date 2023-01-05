@@ -16,7 +16,7 @@ resource "null_resource" "push-custom-image-proxy-image-to-gcr" {
 
 resource "kubernetes_deployment_v1" "image-proxy-deployment" {
   metadata {
-    name = var.namespace
+    name      = var.namespace
     namespace = var.namespace
     labels = {
       app = var.namespace
@@ -38,7 +38,7 @@ resource "kubernetes_deployment_v1" "image-proxy-deployment" {
       }
       spec {
         container {
-          name = var.namespace
+          name  = var.namespace
           image = "gcr.io/${var.project_id}/${var.namespace}:1.0"
           args = [
             "-addr",
@@ -53,11 +53,11 @@ resource "kubernetes_deployment_v1" "image-proxy-deployment" {
           resources {
             requests = {
               memory = "512Mi"
-              cpu = "100m"
+              cpu    = "100m"
             }
             limits = {
               memory = "1024Mi"
-              cpu = "250m"
+              cpu    = "250m"
             }
           }
           volume_mount {
@@ -65,7 +65,7 @@ resource "kubernetes_deployment_v1" "image-proxy-deployment" {
             name       = "cache-volume"
           }
           port {
-            name = "http-port"
+            name           = "http-port"
             container_port = 8080
           }
           liveness_probe {
@@ -74,7 +74,7 @@ resource "kubernetes_deployment_v1" "image-proxy-deployment" {
               port = "http-port"
             }
             initial_delay_seconds = 60
-            period_seconds = 3
+            period_seconds        = 3
           }
           readiness_probe {
             http_get {
@@ -82,7 +82,7 @@ resource "kubernetes_deployment_v1" "image-proxy-deployment" {
               port = "http-port"
             }
             initial_delay_seconds = 60
-            period_seconds = 3
+            period_seconds        = 3
           }
         }
 
@@ -102,7 +102,7 @@ resource "kubernetes_deployment_v1" "image-proxy-deployment" {
 
 resource "kubernetes_service_v1" "image-proxy-service" {
   metadata {
-    name = var.namespace
+    name      = var.namespace
     namespace = var.namespace
   }
   spec {
@@ -110,9 +110,9 @@ resource "kubernetes_service_v1" "image-proxy-service" {
       app = var.namespace
     }
     port {
-      protocol = "TCP"
+      protocol    = "TCP"
       target_port = "http-port"
-      port = var.image_proxy_port
+      port        = var.image_proxy_port
     }
   }
 

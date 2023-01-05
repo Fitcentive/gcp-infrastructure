@@ -36,14 +36,14 @@ resource "google_service_account_key" "go-image-service-service-account-key" {
 }
 
 resource "google_project_iam_member" "go-image-service-service-account-iam-member" {
-  project            = var.project_id
-  role               = "roles/storage.objectAdmin"
-  member             = "serviceAccount:${google_service_account.go-image-service-service-account.email}"
+  project = var.project_id
+  role    = "roles/storage.objectAdmin"
+  member  = "serviceAccount:${google_service_account.go-image-service-service-account.email}"
 }
 
 resource "kubernetes_secret" "image-service-service-account-credentials" {
   metadata {
-    name = "image-service-service-account-credentials"
+    name      = "image-service-service-account-credentials"
     namespace = var.namespace
   }
   data = {
@@ -57,7 +57,7 @@ resource "kubernetes_secret" "image-service-service-account-credentials" {
 
 resource "kubernetes_deployment_v1" "image-service-deployment" {
   metadata {
-    name = var.namespace
+    name      = var.namespace
     namespace = var.namespace
     labels = {
       app = var.namespace
@@ -88,10 +88,10 @@ resource "kubernetes_deployment_v1" "image-service-deployment" {
               ]
             }
           }
-          image = "gcr.io/${var.project_id}/${var.namespace}:1.0"
+          image   = "gcr.io/${var.project_id}/${var.namespace}:1.0"
           command = ["entrypoint.sh"]
           args = [
-            "-token" ,
+            "-token",
             var.service_secret,
             "-upload_limit",
             "4950996300",
@@ -100,15 +100,15 @@ resource "kubernetes_deployment_v1" "image-service-deployment" {
           resources {
             requests = {
               memory = "512Mi"
-              cpu = "100m"
+              cpu    = "100m"
             }
             limits = {
               memory = "1024Mi"
-              cpu = "250m"
+              cpu    = "250m"
             }
           }
           port {
-            name = "http-port"
+            name           = "http-port"
             container_port = 25478
           }
           liveness_probe {
@@ -117,7 +117,7 @@ resource "kubernetes_deployment_v1" "image-service-deployment" {
               port = "http-port"
             }
             initial_delay_seconds = 60
-            period_seconds = 3
+            period_seconds        = 3
           }
           readiness_probe {
             http_get {
@@ -125,14 +125,14 @@ resource "kubernetes_deployment_v1" "image-service-deployment" {
               port = "http-port"
             }
             initial_delay_seconds = 60
-            period_seconds = 3
+            period_seconds        = 3
           }
           env {
-            name = "BUCKET"
+            name  = "BUCKET"
             value = var.image_service_bucket_name
           }
           env {
-            name = "MOUNT"
+            name  = "MOUNT"
             value = "/opt/media"
           }
           env_from {
@@ -161,7 +161,7 @@ resource "kubernetes_deployment_v1" "image-service-deployment" {
 
 resource "kubernetes_service_v1" "image-service-service" {
   metadata {
-    name = var.namespace
+    name      = var.namespace
     namespace = var.namespace
   }
   spec {
@@ -169,9 +169,9 @@ resource "kubernetes_service_v1" "image-service-service" {
       app = var.namespace
     }
     port {
-      protocol = "TCP"
+      protocol    = "TCP"
       target_port = "http-port"
-      port = var.image_service_port
+      port        = var.image_service_port
     }
   }
 

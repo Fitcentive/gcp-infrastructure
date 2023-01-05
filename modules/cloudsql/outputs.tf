@@ -11,7 +11,7 @@ output "cloudsql_instance_name" {
 output "cloudsql_instance_password" {
   value       = google_sql_user.keycloak.password
   description = "Cloud SQL instance password"
-  sensitive = true
+  sensitive   = true
 }
 
 output "cloudsql_instance_username" {

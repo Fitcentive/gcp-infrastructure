@@ -7,8 +7,8 @@ terraform {
   }
 
   backend "gcs" {
-    bucket  = "p2m-tf-state-nonproduction"
-    prefix  = "terraform/state"
+    bucket = "p2m-tf-state-nonproduction"
+    prefix = "terraform/state"
   }
 
   required_version = ">= 0.14"
@@ -17,8 +17,8 @@ terraform {
 data "terraform_remote_state" "tf-remote-state-nonproduction" {
   backend = "gcs"
   config = {
-    bucket  = "p2m-tf-state-nonproduction"
-    prefix  = "terraform/state"
+    bucket = "p2m-tf-state-nonproduction"
+    prefix = "terraform/state"
   }
 }
 

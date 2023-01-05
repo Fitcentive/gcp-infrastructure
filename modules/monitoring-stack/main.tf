@@ -1,6 +1,6 @@
 resource "random_password" "grafana-admin-pwd" {
-  length           = 30
-  special          = false
+  length  = 30
+  special = false
 }
 
 resource "kubernetes_namespace" "monitoring" {
@@ -19,7 +19,7 @@ resource "helm_release" "prometheus-stack" {
 
   values = [
     sensitive(templatefile("${path.module}/helm-values/custom_kube-prometheus-stack.yaml", {
-      HELM_KUBEPROMSTACK_RELEASE_NAME   = var.helm_kubepromstack_releasename
+      HELM_KUBEPROMSTACK_RELEASE_NAME = var.helm_kubepromstack_releasename
     })),
 
     sensitive(templatefile("${path.module}/helm-values/custom_Grafana.yaml", {

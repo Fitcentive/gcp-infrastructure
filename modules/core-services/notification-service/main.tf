@@ -14,14 +14,14 @@ resource "google_service_account_key" "notification-service-service-account-key"
 }
 
 resource "google_project_iam_member" "notification-service-service-account-iam-member" {
-  project            = var.project_id
-  role               = "roles/pubsub.admin"
-  member             = "serviceAccount:${google_service_account.notification-service-service-account.email}"
+  project = var.project_id
+  role    = "roles/pubsub.admin"
+  member  = "serviceAccount:${google_service_account.notification-service-service-account.email}"
 }
 
 resource "kubernetes_secret" "notification-service-service-account-credentials" {
   metadata {
-    name = "notification-service-service-account-credentials"
+    name      = "notification-service-service-account-credentials"
     namespace = var.namespace
   }
   data = {
@@ -31,7 +31,7 @@ resource "kubernetes_secret" "notification-service-service-account-credentials" 
 
 resource "kubernetes_secret" "firebase-database-url" {
   metadata {
-    name = "firebase-database-url"
+    name      = "firebase-database-url"
     namespace = var.namespace
   }
 
@@ -49,7 +49,7 @@ resource "google_service_account_key" "firebase-admin-service-account-key" {
 
 resource "kubernetes_secret" "firebase-admin-service-account-credentials" {
   metadata {
-    name = "firebase-admin-service-account-credentials"
+    name      = "firebase-admin-service-account-credentials"
     namespace = var.namespace
   }
   data = {

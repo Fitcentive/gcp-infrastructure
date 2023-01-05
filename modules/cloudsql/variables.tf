@@ -1,6 +1,6 @@
 variable "keycloak_db_username" {
   description = "Username for keycloak db"
-  default = "keycloak"
+  default     = "keycloak"
 }
 
 variable "region" {

@@ -9,7 +9,7 @@ output "project_id" {
 }
 
 output "tf_remote_state_bucket_dev" {
-  value = google_storage_bucket.terraform-dev-remote-state-bucket.name
+  value       = google_storage_bucket.terraform-dev-remote-state-bucket.name
   description = "Terraform remote state storage bucket for DEV environment"
 }
 

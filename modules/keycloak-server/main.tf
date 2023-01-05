@@ -32,7 +32,7 @@ resource "kubernetes_namespace" "keycloak" {
 
 resource "kubernetes_secret" "keycloak-cloudsql-instance-credentials" {
   metadata {
-    name = "keycloak-cloudsql-instance-credentials"
+    name      = "keycloak-cloudsql-instance-credentials"
     namespace = var.namespace
   }
   data = {
@@ -46,13 +46,13 @@ resource "kubernetes_secret" "keycloak-cloudsql-instance-credentials" {
 
 resource "kubernetes_secret" "keycloak-cloudsql-database-credentials" {
   metadata {
-    name = "keycloak-cloudsql-database-credentials"
+    name      = "keycloak-cloudsql-database-credentials"
     namespace = var.namespace
   }
 
   data = {
     DB_DATABASE = google_sql_database.keycloak-helm-db.name
-    DB_USER = var.cloud_sql_instance_username
+    DB_USER     = var.cloud_sql_instance_username
     DB_PASSWORD = var.cloud_sql_instance_password
   }
 
@@ -71,10 +71,10 @@ resource "helm_release" "keycloak" {
 
   values = [
     sensitive(templatefile("${path.module}/resources/helm-values/custom_Keycloak.yaml", {
-      KEYCLOAK_SERVER_IMAGE              = "gcr.io/${var.project_id}/${var.helm_keycloak_name}"
-      KEYCLOAK_CLOUDSQL_INSTANCE_SECRET  = kubernetes_secret.keycloak-cloudsql-instance-credentials.metadata.0.name
-      KEYCLOAK_CLOUDSQL_DATABASE_SECRET  = kubernetes_secret.keycloak-cloudsql-database-credentials.metadata.0.name
-      GCP_CLOUD_SQL_INSTANCE             = var.cloud_sql_instance_connection_name
+      KEYCLOAK_SERVER_IMAGE             = "gcr.io/${var.project_id}/${var.helm_keycloak_name}"
+      KEYCLOAK_CLOUDSQL_INSTANCE_SECRET = kubernetes_secret.keycloak-cloudsql-instance-credentials.metadata.0.name
+      KEYCLOAK_CLOUDSQL_DATABASE_SECRET = kubernetes_secret.keycloak-cloudsql-database-credentials.metadata.0.name
+      GCP_CLOUD_SQL_INSTANCE            = var.cloud_sql_instance_connection_name
     }))
   ]
 
@@ -107,9 +107,9 @@ resource "kubernetes_ingress_v1" "keycloak-ingress" {
     name = "${var.namespace}-ingress"
     annotations = {
       "kubernetes.io/ingress.global-static-ip-name" = var.global_static_ip_name
-      "networking.gke.io/v1beta1.FrontendConfig" = "${var.namespace}-ingress-frontend-config"
-      "networking.gke.io/managed-certificates" = "${var.namespace}-ingress-managed-certificate"
-      "kubernetes.io/ingress.class" = "gce"
+      "networking.gke.io/v1beta1.FrontendConfig"    = "${var.namespace}-ingress-frontend-config"
+      "networking.gke.io/managed-certificates"      = "${var.namespace}-ingress-managed-certificate"
+      "kubernetes.io/ingress.class"                 = "gce"
     }
     namespace = var.namespace
   }
@@ -118,7 +118,7 @@ resource "kubernetes_ingress_v1" "keycloak-ingress" {
     rule {
       http {
         path {
-          path = "/auth"
+          path      = "/auth"
           path_type = "Prefix"
           backend {
             service {

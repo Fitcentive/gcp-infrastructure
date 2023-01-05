@@ -36,16 +36,16 @@ output "kubernetes_cluster_host" {
 }
 
 output "gke_static_ip_name" {
-  value = google_compute_global_address.global-static-ip.name
+  value       = google_compute_global_address.global-static-ip.name
   description = "GKE Static IP name"
 }
 
 output "gke_static_ip_address" {
-  value = google_compute_global_address.global-static-ip.address
+  value       = google_compute_global_address.global-static-ip.address
   description = "GKE Static IP address"
 }
 
 output "gke_ssl_policy_name" {
-  value = google_compute_ssl_policy.primary-ssl-policy.name
+  value       = google_compute_ssl_policy.primary-ssl-policy.name
   description = "GKE SSL policy name"
 }

@@ -6,8 +6,8 @@ resource "google_compute_network" "vpc" {
 
 # Subnet
 resource "google_compute_subnetwork" "subnet" {
-  name          = "${var.project_id}-subnet"
-  region        = var.region
+  name   = "${var.project_id}-subnet"
+  region = var.region
 
   network       = google_compute_network.vpc.name
   ip_cidr_range = "10.10.0.0/24"
@@ -48,7 +48,7 @@ resource "google_container_cluster" "primary" {
 
 # Separately Managed Node Pool
 resource "google_container_node_pool" "primary_nodes" {
-  name       = "${google_container_cluster.primary.name}"
+  name       = google_container_cluster.primary.name
   location   = var.zone
   cluster    = google_container_cluster.primary.name
   node_count = var.gke_num_nodes
