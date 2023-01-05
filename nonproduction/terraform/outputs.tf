@@ -15,7 +15,7 @@ output "tf_remote_state_bucket_dev" {
 
 # To view output, terraform output -raw tf_service_account_private_key
 output "tf_service_account_private_key" {
-  value       = google_service_account_key.terraform-service-account-key.private_key
+  value       = module.dev-terraform-service-account.service_account_key
   description = "Base64 version of terraform service account private key"
   sensitive   = true
 }

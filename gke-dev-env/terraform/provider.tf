@@ -39,18 +39,26 @@ data "terraform_remote_state" "tf_remote_state_dev" {
   }
 }
 
+data "terraform_remote_state" "tf_remote_state_nonproduction" {
+  backend = "gcs"
+  config = {
+    bucket  = "p2m-tf-state-nonproduction"
+    prefix  = "terraform/state"
+  }
+}
+
 data "google_client_config" "default" {}
 
 provider "google" {
   project = local.project_id
   region  = local.region
-  credentials = file("../resources/terraform_service_account.json")
+  credentials = base64decode(data.terraform_remote_state.tf_remote_state_nonproduction.outputs.tf_service_account_private_key)
 }
 
 provider "google-beta" {
   project = local.project_id
   region  = local.region
-  credentials = file("../resources/terraform_service_account.json")
+  credentials = base64decode(data.terraform_remote_state.tf_remote_state_nonproduction.outputs.tf_service_account_private_key)
 }
 
 provider "kubernetes" {
