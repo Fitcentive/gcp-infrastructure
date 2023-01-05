@@ -153,3 +153,12 @@ module "dev-notification-service" {
   ]
 
 }
+
+module "dev-social-service" {
+  source = "../../modules/core-services/social-service"
+
+  project_id = local.project_id
+  depends_on = [
+    module.gke-dev-functional-namespaces,
+  ]
+}
