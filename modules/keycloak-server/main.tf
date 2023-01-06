@@ -87,35 +87,73 @@ resource "helm_release" "keycloak" {
 }
 
 # Note - YAML not in separate file so that ssl policy can be interpolated in TF
-resource "kubectl_manifest" "keycloak-ingress-gcp-frontend-config" {
-  yaml_body = <<YAML
-apiVersion: networking.gke.io/v1beta1
-kind: FrontendConfig
-metadata:
-  name: ${var.namespace}-ingress-frontend-config
-  namespace: ${var.namespace}
-spec:
-  sslPolicy: ${var.ssl_policy_name}
-  redirectToHttps:
-    enabled: true
-    responseCodeName: MOVED_PERMANENTLY_DEFAULT
-YAML
-}
+# Note - not using this as nginx handles ssl redirect itself
+#resource "kubectl_manifest" "keycloak-ingress-gcp-frontend-config" {
+#  yaml_body = <<YAML
+#apiVersion: networking.gke.io/v1beta1
+#kind: FrontendConfig
+#metadata:
+#  name: ${var.namespace}-ingress-frontend-config
+#  namespace: ${var.namespace}
+#spec:
+#  sslPolicy: ${var.ssl_policy_name}
+#  redirectToHttps:
+#    enabled: true
+#    responseCodeName: MOVED_PERMANENTLY_DEFAULT
+#YAML
+#}
 
-resource "kubernetes_ingress_v1" "keycloak-ingress" {
+resource "kubernetes_ingress_v1" "keycloak-basic-login-ingress" {
   metadata {
-    name = "${var.namespace}-ingress"
+    name = "${var.namespace}-basic-login-ingress"
     annotations = {
-      "kubernetes.io/ingress.global-static-ip-name" = var.global_static_ip_name
-      "networking.gke.io/v1beta1.FrontendConfig"    = "${var.namespace}-ingress-frontend-config"
-      "networking.gke.io/managed-certificates"      = "${var.namespace}-ingress-managed-certificate"
-      "kubernetes.io/ingress.class"                 = "gce"
+      "kubernetes.io/ingress.class"                = "nginx"
+      "cert-manager.io/cluster-issuer"             = "letsencrypt-cluster-issuer"
+      "nginx.ingress.kubernetes.io/ssl-redirect"   = true
+      "nginx.ingress.kubernetes.io/rewrite-target" = "/auth/realms/NativeAuth/protocol/openid-connect/token"
     }
     namespace = var.namespace
   }
 
   spec {
     rule {
+      host = var.keycloak_server_host
+      http {
+        path {
+          path = "/api/auth/login/basic"
+          path_type = "Exact"
+          backend {
+            service {
+              name = "${var.namespace}-service-http"
+              port {
+                number = 80
+              }
+            }
+          }
+        }
+      }
+    }
+    tls {
+      hosts       = [var.keycloak_server_host]
+      secret_name = "keycloak-tls-certificate"
+    }
+  }
+}
+
+resource "kubernetes_ingress_v1" "keycloak-ingress" {
+  metadata {
+    name = "${var.namespace}-ingress"
+    annotations = {
+      "kubernetes.io/ingress.class"              = "nginx"
+      "cert-manager.io/cluster-issuer"           = "letsencrypt-cluster-issuer"
+      "nginx.ingress.kubernetes.io/ssl-redirect" = true
+    }
+    namespace = var.namespace
+  }
+
+  spec {
+    rule {
+      host = var.keycloak_server_host
       http {
         path {
           path      = "/auth"
@@ -131,22 +169,23 @@ resource "kubernetes_ingress_v1" "keycloak-ingress" {
         }
       }
     }
+    tls {
+      hosts       = [var.keycloak_server_host]
+      secret_name = "keycloak-tls-certificate"
+    }
   }
-
-  depends_on = [
-    kubectl_manifest.keycloak-ingress-gcp-frontend-config
-  ]
 }
 
-resource "kubectl_manifest" "keycloak-ingress-managed-certificate" {
-  yaml_body = <<YAML
-apiVersion: networking.gke.io/v1
-kind: ManagedCertificate
-metadata:
-  name: ${var.namespace}-ingress-managed-certificate
-  namespace: ${var.namespace}
-spec:
-  domains:
-    - auth.fitcentive.xyz
-YAML
-}
+# Avoiding this in favour of using nginx + letsEncrypt instead
+#resource "kubectl_manifest" "keycloak-ingress-managed-certificate" {
+#  yaml_body = <<YAML
+#apiVersion: networking.gke.io/v1
+#kind: ManagedCertificate
+#metadata:
+#  name: ${var.namespace}-ingress-managed-certificate
+#  namespace: ${var.namespace}
+#spec:
+#  domains:
+#    - auth.fitcentive.xyz
+#YAML
+#}

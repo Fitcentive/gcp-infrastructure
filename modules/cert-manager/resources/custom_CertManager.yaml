@@ -1,0 +1,13 @@
+# Default values for cert-manager.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+# Complete definition template at: https://github.com/jetstack/cert-manager/blob/master/deploy/charts/cert-manager/values.yaml
+global:
+  podSecurityPolicy:
+    enabled: ${PSP_ENABLE}
+    useAppArmor: ${PSP_APPARMOR}
+
+installCRDs: ${INSTALL_CRDS}
+
+prometheus:
+  enabled: ${PROMETHEUS_ENABLED}

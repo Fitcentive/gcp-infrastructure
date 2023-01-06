@@ -40,14 +40,14 @@ output "cloudsql_database_instance_connection" {
   description = "GCP Cloud SQL DB instance connection name"
 }
 
-output "gke_static_ip_name" {
-  value       = module.gke-dev-env.gke_static_ip_name
-  description = "GKE Static IP name"
+output "gke_regional_static_ip_name" {
+  value       = module.gke-dev-env.gke_regional_static_ip_name
+  description = "GKE Regional Static IP name"
 }
 
-output "gke_static_ip_address" {
-  value       = module.gke-dev-env.gke_static_ip_address
-  description = "GKE Static IP address"
+output "gke_regional_static_ip_address" {
+  value       = module.gke-dev-env.gke_regional_static_ip_address
+  description = "GKE Regional Static IP address"
 }
 
 output "firebase_firestore_database_url" {

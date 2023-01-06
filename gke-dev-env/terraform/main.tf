@@ -58,12 +58,26 @@ module "dev-monitoring-stack" {
 }
 
 # Avoiding NGINX controller for now as there seems to be no easy way to bind to Static IP
-#module "dev-nginx-ingress-controller" {
-#  source = "../../modules/nginx-ingress-controller"
-#
-#  project_id = local.project_id
-#  region     = local.region
-#}
+module "dev-nginx-ingress-controller" {
+  source = "../../modules/nginx-ingress-controller"
+
+  project_id = local.project_id
+  region     = local.region
+
+  regional_static_ip_address = module.gke-dev-env.gke_regional_static_ip_address
+
+  depends_on = [
+    module.gke-dev-env
+  ]
+}
+
+module "dev-cert-manager" {
+  source = "../../modules/cert-manager"
+
+  depends_on = [
+    module.gke-dev-env
+  ]
+}
 
 # K8s Keycloak server deployment
 module "dev-keycloak-server" {
@@ -79,7 +93,7 @@ module "dev-keycloak-server" {
   cloud_sql_instance_username  = module.cloudsql-dev-env.cloudsql_instance_username
   cloudsql_service_account_key = module.cloudsql-dev-env.cloudsql_service_account_key
 
-  global_static_ip_name = module.gke-dev-env.gke_static_ip_name
+  global_static_ip_name = module.gke-dev-env.gke_regional_static_ip_name
   ssl_policy_name       = module.gke-dev-env.gke_ssl_policy_name
 
   depends_on = [
@@ -160,18 +174,4 @@ module "dev-social-service" {
   depends_on = [
     module.gke-dev-functional-namespaces,
   ]
-}
-
-module "dev-auth-service" {
-  source = "../../modules/core-services/auth-service"
-
-  project_id = local.project_id
-
-  global_static_ip_name = module.gke-dev-env.gke_static_ip_name
-  ssl_policy_name       = module.gke-dev-env.gke_ssl_policy_name
-
-  depends_on = [
-    module.gke-dev-functional-namespaces,
-  ]
-
 }

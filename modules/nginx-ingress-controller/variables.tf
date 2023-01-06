@@ -20,3 +20,7 @@ variable "helm_nginx_name" {
   type    = string
   default = "nginx-service"
 }
+
+variable "regional_static_ip_address" {
+  description = "Regional Static External IP address for LoadBalancer"
+}

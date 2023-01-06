@@ -1,9 +1,9 @@
 variable "namespace" {
-  type    = string
+  type = string
 }
 
 variable "service_name" {
-  type    = string
+  type = string
 }
 
 variable "project_id" {

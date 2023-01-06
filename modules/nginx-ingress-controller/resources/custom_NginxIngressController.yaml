@@ -1,0 +1,3 @@
+controller:
+  service:
+    loadBalancerIP: ${STATIC_LOAD_BALANCER_IP_ADDRESS}
