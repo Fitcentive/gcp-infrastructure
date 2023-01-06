@@ -11,17 +11,6 @@ resource "google_sql_database_instance" "gke-dev-env-cloud-sql-instance" {
   deletion_protection = "true"
 }
 
-resource "random_password" "pwd" {
-  length  = 16
-  special = false
-}
-
-resource "google_sql_user" "keycloak" {
-  name     = var.keycloak_db_username
-  instance = google_sql_database_instance.gke-dev-env-cloud-sql-instance.name
-  password = random_password.pwd.result
-}
-
 resource "google_service_account" "cloudsql-service-account" {
   account_id   = "cloudsql-service-account"
   display_name = "Service Account to run CloudSql Proxy as sidecar container(s)"

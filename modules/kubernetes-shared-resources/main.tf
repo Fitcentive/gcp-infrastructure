@@ -25,3 +25,15 @@ resource "kubernetes_secret" "internal-service-secret" {
     INTERNAL_SERVICE_SECRET = random_string.internal-service-secret.result
   }
 }
+
+resource "kubernetes_secret" "image-service-secret" {
+  for_each = toset(var.service_namespaces)
+
+  metadata {
+    name      = "image-service-secret"
+    namespace = each.key
+  }
+  data = {
+    IMAGE_SERVICE_TOKEN = var.image_service_token
+  }
+}

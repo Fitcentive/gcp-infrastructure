@@ -1,4 +1,3 @@
-# Note - AuraDB is provisioned through the console. Can be accessed at https://console.neo4j.io/
 module "pubsub-service-account" {
   source = "../../pubsub-service-account"
 

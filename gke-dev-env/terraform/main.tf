@@ -3,6 +3,13 @@
 # Container registry
 resource "google_container_registry" "gke-dev-env" {}
 
+# Random service secret for use between image-service and image-proxy
+resource "random_string" "image-service-secret" {
+  length  = 16
+  special = false
+}
+
+
 module "dev-firebase-project" {
   source = "../../modules/firebase"
 
@@ -42,6 +49,7 @@ module "gke-dev-shared-resources" {
   source = "../../modules/kubernetes-shared-resources"
 
   service_namespaces = local.service_namespaces
+  image_service_token = random_string.image-service-secret.result
 
   depends_on = [
     module.gke-dev-functional-namespaces
@@ -88,10 +96,7 @@ module "dev-keycloak-server" {
 
   cloud_sql_instance_name            = module.cloudsql-dev-env.cloudsql_instance_name
   cloud_sql_instance_connection_name = module.cloudsql-dev-env.cloudsql_instance_connection_name
-
-  cloud_sql_instance_password  = module.cloudsql-dev-env.cloudsql_instance_password
-  cloud_sql_instance_username  = module.cloudsql-dev-env.cloudsql_instance_username
-  cloudsql_service_account_key = module.cloudsql-dev-env.cloudsql_service_account_key
+  cloudsql_service_account_key       = module.cloudsql-dev-env.cloudsql_service_account_key
 
   global_static_ip_name = module.gke-dev-env.gke_regional_static_ip_name
   ssl_policy_name       = module.gke-dev-env.gke_ssl_policy_name
@@ -115,18 +120,12 @@ module "dev-mailhog-server" {
 
 
 # ------------------------------------------------------------------------
-# Random service secret for use between image-service and image-proxy
-resource "random_string" "service_secret" {
-  length  = 16
-  special = false
-}
-
 module "dev-image-server" {
   source = "../../modules/core-services/go-image-server"
 
   project_id     = local.project_id
   region         = local.region
-  service_secret = random_string.service_secret.result
+  service_secret = random_string.image-service-secret.result
 
   depends_on = [
     module.gke-dev-env
@@ -138,7 +137,7 @@ module "dev-image-proxy-server" {
 
   project_id     = local.project_id
   region         = local.region
-  service_secret = random_string.service_secret.result
+  service_secret = random_string.image-service-secret.result
 
   depends_on = [
     module.gke-dev-env
@@ -154,6 +153,8 @@ module "dev-notification-service" {
   # Note - this output is empty, seems like it need enabling in Firebase console. Perhaps it is not needed though?
   firebase_database_url   = module.dev-firebase-project.firestore_database_url
   cloud_sql_instance_name = module.cloudsql-dev-env.cloudsql_instance_name
+  cloud_sql_instance_connection_name = module.cloudsql-dev-env.cloudsql_instance_connection_name
+  cloudsql_service_account_key       = module.cloudsql-dev-env.cloudsql_service_account_key
 
   # Note - the following value is fetched from https://console.firebase.google.com/u/1/project/place-2-meet-dev/settings/serviceaccounts/adminsdk
   # This value is created when `module.dev-firebase-project` is executed successfully
@@ -163,8 +164,8 @@ module "dev-notification-service" {
   depends_on = [
     module.gke-dev-functional-namespaces,
     module.dev-firebase-project,
+    module.cloudsql-dev-env,
   ]
-
 }
 
 module "dev-social-service" {
@@ -172,13 +173,32 @@ module "dev-social-service" {
 
   project_id = local.project_id
 
-  neo4j_db_name  = "Place2MeetGraphDb"
-  neo4j_password = "svcX494RgXZQGyCm4bDbrF2cbzOPDkKUUnS_3lnJJ9M"
-  neo4j_uri      = "neo4j+s://50af67f7.databases.neo4j.io"
-  neo4j_username = "neo4j"
+  neo4j_db_name  = local.neo4j_db_name
+  neo4j_password = local.neo4j_password
+  neo4j_uri      = local.neo4j_uri
+  neo4j_username = local.neo4j_username
 
   depends_on = [
     module.gke-dev-functional-namespaces,
   ]
 
+}
+
+module "dev-user-service" {
+  source = "../../modules/core-services/user-service"
+
+  project_id = local.project_id
+
+  neo4j_db_name  = local.neo4j_db_name
+  neo4j_password = local.neo4j_password
+  neo4j_uri      = local.neo4j_uri
+  neo4j_username = local.neo4j_username
+
+  cloud_sql_instance_connection_name = module.cloudsql-dev-env.cloudsql_instance_connection_name
+  cloud_sql_instance_name            = module.cloudsql-dev-env.cloudsql_instance_name
+  cloudsql_service_account_key       = module.cloudsql-dev-env.cloudsql_service_account_key
+
+  depends_on = [
+    module.gke-dev-functional-namespaces,
+  ]
 }

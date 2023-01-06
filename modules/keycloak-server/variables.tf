@@ -3,6 +3,11 @@ variable "namespace" {
   default = "keycloak"
 }
 
+variable "keycloak_db_name" {
+  type    = string
+  default = "keycloak-helm-db"
+}
+
 variable "helm_keycloak_version" {
   type    = string
   default = "18.1.1"
@@ -32,14 +37,6 @@ variable "cloud_sql_instance_name" {
 
 variable "cloud_sql_instance_connection_name" {
   description = "GCP Cloud SQL instance connection name"
-}
-
-variable "cloud_sql_instance_username" {
-  description = "GCP Cloud SQL instance username"
-}
-
-variable "cloud_sql_instance_password" {
-  description = "GCP Cloud SQL instance password"
 }
 
 variable "cloudsql_service_account_key" {

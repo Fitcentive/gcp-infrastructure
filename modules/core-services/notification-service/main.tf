@@ -1,14 +1,19 @@
-resource "google_sql_database" "notification-service-db" {
-  name     = "${var.service_name}-db"
-  instance = var.cloud_sql_instance_name
-}
-
 module "pubsub-service-account" {
   source = "../../pubsub-service-account"
 
   project_id   = var.project_id
   namespace    = var.namespace
   service_name = var.service_name
+}
+
+module "notification-service-db" {
+  source = "../../cloudsql-resources"
+
+  cloud_sql_instance_connection_name = var.cloud_sql_instance_connection_name
+  cloud_sql_instance_name            = var.cloud_sql_instance_name
+  cloudsql_service_account_key       = var.cloudsql_service_account_key
+  database_name                      = var.database_name
+  namespace                          = var.namespace
 }
 
 resource "kubernetes_secret" "firebase-database-url" {

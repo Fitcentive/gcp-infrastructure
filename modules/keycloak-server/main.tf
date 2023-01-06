@@ -18,49 +18,25 @@ resource "null_resource" "push_custom_keycloak_docker_image_to_gcr" {
   }
 }
 
-
-resource "google_sql_database" "keycloak-helm-db" {
-  name     = "keycloak-helm-db"
-  instance = var.cloud_sql_instance_name
-}
-
 resource "kubernetes_namespace" "keycloak" {
   metadata {
     name = var.namespace
   }
 }
 
-resource "kubernetes_secret" "keycloak-cloudsql-instance-credentials" {
-  metadata {
-    name      = "keycloak-cloudsql-instance-credentials"
-    namespace = var.namespace
-  }
-  data = {
-    "credentials.json" = base64decode(var.cloudsql_service_account_key)
-  }
+module "keycloak-helm-db" {
+  source = "../cloudsql-resources"
+
+  cloud_sql_instance_connection_name = var.cloud_sql_instance_connection_name
+  cloud_sql_instance_name            = var.cloud_sql_instance_name
+  cloudsql_service_account_key       = var.cloudsql_service_account_key
+  database_name                      = var.keycloak_db_name
+  namespace                          = var.namespace
 
   depends_on = [
     kubernetes_namespace.keycloak
   ]
 }
-
-resource "kubernetes_secret" "keycloak-cloudsql-database-credentials" {
-  metadata {
-    name      = "keycloak-cloudsql-database-credentials"
-    namespace = var.namespace
-  }
-
-  data = {
-    DB_DATABASE = google_sql_database.keycloak-helm-db.name
-    DB_USER     = var.cloud_sql_instance_username
-    DB_PASSWORD = var.cloud_sql_instance_password
-  }
-
-  depends_on = [
-    kubernetes_namespace.keycloak
-  ]
-}
-
 
 resource "helm_release" "keycloak" {
   repository = "codecentric"
@@ -72,17 +48,16 @@ resource "helm_release" "keycloak" {
   values = [
     sensitive(templatefile("${path.module}/resources/helm-values/custom_Keycloak.yaml", {
       KEYCLOAK_SERVER_IMAGE             = "gcr.io/${var.project_id}/${var.helm_keycloak_name}"
-      KEYCLOAK_CLOUDSQL_INSTANCE_SECRET = kubernetes_secret.keycloak-cloudsql-instance-credentials.metadata.0.name
-      KEYCLOAK_CLOUDSQL_DATABASE_SECRET = kubernetes_secret.keycloak-cloudsql-database-credentials.metadata.0.name
+      KEYCLOAK_CLOUDSQL_INSTANCE_SECRET = module.keycloak-helm-db.cloudsql_instance_credentials_name
+      KEYCLOAK_CLOUDSQL_DATABASE_SECRET = module.keycloak-helm-db.cloudsql_database_credentials_name
       GCP_CLOUD_SQL_INSTANCE            = var.cloud_sql_instance_connection_name
     }))
   ]
 
   depends_on = [
     kubernetes_namespace.keycloak,
-    kubernetes_secret.keycloak-cloudsql-instance-credentials,
-    kubernetes_secret.keycloak-cloudsql-database-credentials,
-    null_resource.push_custom_keycloak_docker_image_to_gcr
+    null_resource.push_custom_keycloak_docker_image_to_gcr,
+    module.keycloak-helm-db,
   ]
 }
 
