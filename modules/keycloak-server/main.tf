@@ -147,6 +147,6 @@ metadata:
   namespace: ${var.namespace}
 spec:
   domains:
-    - fitcentive.xyz
+    - auth.fitcentive.xyz
 YAML
 }

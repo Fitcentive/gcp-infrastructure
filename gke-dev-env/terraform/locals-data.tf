@@ -17,9 +17,4 @@ locals {
     "public-gateway",
   ]
 
-  # These are those namespaces that require a google-managed certificate to be generated
-  certificate_namespaces = [
-    "auth",
-    "public-gateway",
-  ]
 }

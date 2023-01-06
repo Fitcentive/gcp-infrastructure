@@ -41,8 +41,7 @@ module "gke-dev-functional-namespaces" {
 module "gke-dev-shared-resources" {
   source = "../../modules/kubernetes-shared-resources"
 
-  service_namespaces     = local.service_namespaces
-  certificate_namespaces = local.certificate_namespaces
+  service_namespaces = local.service_namespaces
 
   depends_on = [
     module.gke-dev-functional-namespaces
@@ -161,4 +160,18 @@ module "dev-social-service" {
   depends_on = [
     module.gke-dev-functional-namespaces,
   ]
+}
+
+module "dev-auth-service" {
+  source = "../../modules/core-services/auth-service"
+
+  project_id = local.project_id
+
+  global_static_ip_name = module.gke-dev-env.gke_static_ip_name
+  ssl_policy_name       = module.gke-dev-env.gke_ssl_policy_name
+
+  depends_on = [
+    module.gke-dev-functional-namespaces,
+  ]
+
 }

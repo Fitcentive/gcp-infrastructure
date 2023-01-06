@@ -25,19 +25,3 @@ resource "kubernetes_secret" "internal-service-secret" {
     INTERNAL_SERVICE_SECRET = random_string.internal-service-secret.result
   }
 }
-
-# Create certificates for those namespaces that require it
-resource "kubectl_manifest" "k8s-gce-ingress-managed-certificate" {
-  for_each = toset(var.certificate_namespaces)
-
-  yaml_body = <<YAML
-apiVersion: networking.gke.io/v1
-kind: ManagedCertificate
-metadata:
-  name: ${each.key}-ingress-managed-certificate
-  namespace: ${each.key}
-spec:
-  domains:
-    - auth.fitcentive.xyz
-YAML
-}
