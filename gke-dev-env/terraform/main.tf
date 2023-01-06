@@ -171,7 +171,14 @@ module "dev-social-service" {
   source = "../../modules/core-services/social-service"
 
   project_id = local.project_id
+
+  neo4j_db_name  = "Place2MeetGraphDb"
+  neo4j_password = "svcX494RgXZQGyCm4bDbrF2cbzOPDkKUUnS_3lnJJ9M"
+  neo4j_uri      = "neo4j+s://50af67f7.databases.neo4j.io"
+  neo4j_username = "neo4j"
+
   depends_on = [
     module.gke-dev-functional-namespaces,
   ]
+
 }

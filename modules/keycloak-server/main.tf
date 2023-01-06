@@ -120,7 +120,7 @@ resource "kubernetes_ingress_v1" "keycloak-basic-login-ingress" {
       host = var.keycloak_server_host
       http {
         path {
-          path = "/api/auth/login/basic"
+          path      = "/api/auth/login/basic"
           path_type = "Exact"
           backend {
             service {
