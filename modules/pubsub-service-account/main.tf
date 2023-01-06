@@ -1,25 +1,25 @@
-resource "google_service_account" "notification-service-service-account" {
+resource "google_service_account" "pubsub-service-account" {
   account_id   = "${var.namespace}-service-account"
   display_name = "Service Account for ${var.service_name} to use Google PubSub"
 }
 
-resource "google_service_account_key" "notification-service-service-account-key" {
-  service_account_id = google_service_account.notification-service-service-account.name
+resource "google_service_account_key" "pubsub-service-account-key" {
+  service_account_id = google_service_account.pubsub-service-account.name
   public_key_type    = "TYPE_X509_PEM_FILE"
 }
 
-resource "google_project_iam_member" "notification-service-service-account-iam-member" {
+resource "google_project_iam_member" "pubsub-service-account-iam-member" {
   project = var.project_id
   role    = "roles/pubsub.admin"
-  member  = "serviceAccount:${google_service_account.notification-service-service-account.email}"
+  member  = "serviceAccount:${google_service_account.pubsub-service-account.email}"
 }
 
-resource "kubernetes_secret" "notification-service-service-account-credentials" {
+resource "kubernetes_secret" "pubsub-service-account-credentials" {
   metadata {
-    name      = "notification-service-service-account-credentials"
+    name      = "${var.service_name}-service-account-credentials"
     namespace = var.namespace
   }
   data = {
-    GOOGLE_APPLICATION_CREDENTIALS = base64decode(google_service_account_key.notification-service-service-account-key.private_key)
+    GOOGLE_APPLICATION_CREDENTIALS = base64decode(google_service_account_key.pubsub-service-account-key.private_key)
   }
 }
