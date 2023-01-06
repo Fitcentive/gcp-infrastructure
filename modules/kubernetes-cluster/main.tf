@@ -15,7 +15,8 @@ resource "google_compute_subnetwork" "subnet" {
 
 # Regional Static IP address - nginx does not support global static IP address, only GCE ingress class supports it
 resource "google_compute_address" "regional-static-ip" {
-  name = "${var.project_id}-gke-regional-static-ip"
+  name   = "${var.project_id}-gke-regional-static-ip"
+  region = var.region
 }
 
 # SSL policy for LBs
