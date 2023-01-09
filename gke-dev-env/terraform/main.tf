@@ -9,7 +9,7 @@ resource "random_string" "image-service-secret" {
   special = false
 }
 
-
+# Possibly move this to parent project
 module "dev-firebase-project" {
   source = "../../modules/firebase"
 
@@ -24,9 +24,6 @@ module "cloudsql-dev-env" {
   project_id = local.project_id
 }
 
-
-# GKE cluster - we might have to move this to a parent resource, as the provider scope references the state which is yet to be created
-# Easy fix, target apply this resource first
 module "gke-dev-env" {
   source = "../../modules/kubernetes-cluster"
 
@@ -79,6 +76,7 @@ module "dev-nginx-ingress-controller" {
   ]
 }
 
+# To handle provisioning of TLS certs
 module "dev-cert-manager" {
   source = "../../modules/cert-manager"
 
@@ -107,6 +105,7 @@ module "dev-keycloak-server" {
   ]
 }
 
+# SMTP email intercept for dev env
 module "dev-mailhog-server" {
   source = "../../modules/mailhog"
 
@@ -156,10 +155,7 @@ module "dev-notification-service" {
   cloud_sql_instance_connection_name = module.cloudsql-dev-env.cloudsql_instance_connection_name
   cloudsql_service_account_key       = module.cloudsql-dev-env.cloudsql_service_account_key
 
-  # Note - the following value is fetched from https://console.firebase.google.com/u/1/project/place-2-meet-dev/settings/serviceaccounts/adminsdk
-  # This value is created when `module.dev-firebase-project` is executed successfully
-  # Refer to the README.adoc for more info on how to set this value appropriately
-  firebase_admin_service_account = "firebase-adminsdk-j7w3s"
+  firebase_admin_service_account = local.firebase_admin_service_account
 
   depends_on = [
     module.gke-dev-functional-namespaces,
