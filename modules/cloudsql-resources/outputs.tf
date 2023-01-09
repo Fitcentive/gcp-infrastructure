@@ -9,6 +9,11 @@ output "cloudsql_instance_username" {
   description = "Cloud SQL instance username"
 }
 
+output "cloudsql_database_name" {
+  value       = google_sql_database.service-db.name
+  description = "Cloud SQL database name"
+}
+
 output "cloudsql_instance_credentials_name" {
   value       = kubernetes_secret.cloudsql-instance-credentials.metadata.0.name
   description = "Cloud SQL instance credentials name"

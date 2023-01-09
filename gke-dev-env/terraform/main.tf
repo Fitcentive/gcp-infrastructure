@@ -202,3 +202,17 @@ module "dev-user-service" {
     module.gke-dev-functional-namespaces,
   ]
 }
+
+module "dev-chat-service" {
+  source = "../../modules/core-services/chat-service"
+
+  project_id = local.project_id
+
+  cloud_sql_instance_connection_name = module.cloudsql-dev-env.cloudsql_instance_connection_name
+  cloud_sql_instance_name            = module.cloudsql-dev-env.cloudsql_instance_name
+  cloudsql_service_account_key       = module.cloudsql-dev-env.cloudsql_service_account_key
+
+  depends_on = [
+    module.gke-dev-functional-namespaces,
+  ]
+}

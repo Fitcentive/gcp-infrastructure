@@ -10,6 +10,7 @@ locals {
   ]
 
   service_namespaces = [
+    "chat",
     "auth",
     "notification",
     "user",
