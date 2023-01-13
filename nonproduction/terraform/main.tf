@@ -44,6 +44,13 @@ module "dev-firebase-project" {
   ios_bundle_id        = "io.fitcentive.flutterApp"
   ios_display_name     = "Fitcentive iOS Dev"
   web_display_name     = "Fitcentive Web Dev"
+
+  # Depends on service account module as the google-beta provider uses created service account as credentials via remote state
+  # The firebase provider cannot authenticate via default creds, only service_account for now
+  # Refer to provider `google-beta` credentials in `provider.tf` for more info
+  depends_on = [
+    module.dev-terraform-service-account
+  ]
 }
 
 module "gke-dev-env" {
