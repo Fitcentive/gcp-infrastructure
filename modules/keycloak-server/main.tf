@@ -113,6 +113,10 @@ resource "kubernetes_ingress_v1" "keycloak-basic-login-ingress" {
       secret_name = "keycloak-tls-certificate"
     }
   }
+
+  depends_on = [
+    kubernetes_namespace.keycloak
+  ]
 }
 
 resource "kubernetes_ingress_v1" "keycloak-ingress" {
@@ -149,6 +153,10 @@ resource "kubernetes_ingress_v1" "keycloak-ingress" {
       secret_name = "keycloak-tls-certificate"
     }
   }
+
+  depends_on = [
+    kubernetes_namespace.keycloak,
+  ]
 }
 
 # Avoiding this in favour of using nginx + letsEncrypt instead
