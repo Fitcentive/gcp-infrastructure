@@ -8,7 +8,7 @@ resource "null_resource" "push-custom-image-proxy-image-to-gcr" {
   provisioner "local-exec" {
     command = <<-EOT
       docker pull ${var.image_service_raw_image}:${var.image_service_raw_image_version}
-      docker tag ${var.image_service_raw_image}:${var.image_service_raw_image_version} gcr.io/place-2-meet-dev/${var.namespace}:1.0
+      docker tag ${var.image_service_raw_image}:${var.image_service_raw_image_version} gcr.io/${var.project_id}/${var.namespace}:1.0
       docker push gcr.io/${var.project_id}/${var.namespace}:1.0
     EOT
   }

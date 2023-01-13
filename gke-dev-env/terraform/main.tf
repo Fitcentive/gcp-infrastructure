@@ -9,14 +9,6 @@ resource "random_string" "image-service-secret" {
   special = false
 }
 
-# Possibly move this to parent project
-module "dev-firebase-project" {
-  source = "../../modules/firebase"
-
-  project_id       = local.project_id
-  default_location = local.firebase_location
-}
-
 module "cloudsql-dev-env" {
   source = "../../modules/cloudsql"
 
@@ -150,7 +142,7 @@ module "dev-notification-service" {
 
   project_id = local.project_id
   # Note - this output is empty, seems like it need enabling in Firebase console. Perhaps it is not needed though?
-  firebase_database_url   = module.dev-firebase-project.firestore_database_url
+  firebase_database_url   = data.terraform_remote_state.tf_remote_state_nonproduction.outputs.firebase_firestore_database_url
   cloud_sql_instance_name = module.cloudsql-dev-env.cloudsql_instance_name
   cloud_sql_instance_connection_name = module.cloudsql-dev-env.cloudsql_instance_connection_name
   cloudsql_service_account_key       = module.cloudsql-dev-env.cloudsql_service_account_key
@@ -159,7 +151,6 @@ module "dev-notification-service" {
 
   depends_on = [
     module.gke-dev-functional-namespaces,
-    module.dev-firebase-project,
     module.cloudsql-dev-env,
   ]
 }

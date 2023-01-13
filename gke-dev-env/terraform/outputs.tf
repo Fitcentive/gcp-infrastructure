@@ -50,7 +50,3 @@ output "gke_regional_static_ip_address" {
   description = "GKE Regional Static IP address"
 }
 
-output "firebase_firestore_database_url" {
-  value       = module.dev-firebase-project.firestore_database_url
-  description = "Firebase firestore database URL"
-}

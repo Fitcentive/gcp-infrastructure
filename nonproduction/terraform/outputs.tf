@@ -20,3 +20,7 @@ output "tf_service_account_private_key" {
   sensitive   = true
 }
 
+output "firebase_firestore_database_url" {
+  value       = module.dev-firebase-project.firestore_database_url
+  description = "Firebase firestore database URL"
+}

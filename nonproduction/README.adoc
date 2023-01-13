@@ -3,12 +3,12 @@
 This is a precursor to the GKE DEV ENV
 
 == Pre-reqs
-1. Create terraform remote state bucket manually in the GCP UI named `p2m-tf-state-nonproduction`
+1. Create terraform remote state bucket manually in the GCP UI named `fitcentive-tf-state-nonproduction`
     - Region `northamerica-northeast2`
     - Enable versioning
 2. TF state import created bucket so terraform is aware
     - `tf init`
-    - `tf import google_storage_bucket.terraform-nonproduction-remote-state-bucket place-2-meet-dev/p2m-tf-state-nonproduction`
+    - `tf import google_storage_bucket.terraform-nonproduction-remote-state-bucket fitcentive-dev/fitcentive-tf-state-nonproduction`
 
 == Applying changes
 1. `tf apply`

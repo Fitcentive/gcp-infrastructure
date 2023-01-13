@@ -12,7 +12,7 @@ resource "null_resource" "push_custom_keycloak_docker_image_to_gcr" {
   provisioner "local-exec" {
     command = <<-EOT
       docker build -t ${var.helm_keycloak_name}:latest -t ${var.helm_keycloak_name}:1.0 ${path.module}/resources/
-      docker tag ${var.helm_keycloak_name}:1.0 gcr.io/place-2-meet-dev/${var.helm_keycloak_name}:1.0
+      docker tag ${var.helm_keycloak_name}:1.0 gcr.io/${var.project_id}/${var.helm_keycloak_name}:1.0
       docker push gcr.io/${var.project_id}/${var.helm_keycloak_name}:1.0
     EOT
   }

@@ -18,8 +18,8 @@ resource "google_firebase_project_location" "basic" {
 resource "google_firebase_android_app" "dev-android-app" {
   provider     = google-beta
   project      = var.project_id
-  display_name = "Place2Meet Android Dev"
-  package_name = "app.place2meet.flutter_app"
+  display_name = var.android_display_name
+  package_name = var.android_package_name
 
   depends_on = [
     google_firebase_project.dev-firebase-project
@@ -30,8 +30,8 @@ resource "google_firebase_android_app" "dev-android-app" {
 resource "google_firebase_apple_app" "dev-ios-app" {
   provider     = google-beta
   project      = var.project_id
-  display_name = "Place2Meet iOS Dev"
-  bundle_id    = "app.place2meet.flutterApp"
+  display_name = var.ios_display_name
+  bundle_id    = var.ios_bundle_id
 
   depends_on = [
     google_firebase_project.dev-firebase-project
@@ -41,7 +41,7 @@ resource "google_firebase_apple_app" "dev-ios-app" {
 resource "google_firebase_web_app" "dev-web-app" {
   provider        = google-beta
   project         = var.project_id
-  display_name    = "Place2Meet Web Dev"
+  display_name    = var.web_display_name
   deletion_policy = "DELETE"
 
   depends_on = [

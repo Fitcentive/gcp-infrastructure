@@ -24,7 +24,7 @@ terraform {
 
   backend "gcs" {
     # See nonproduction/terraform/outputs for info on this
-    bucket = "p2m-tf-state-dev"
+    bucket = "fitcentive-tf-state-dev"
     prefix = "terraform/state"
   }
 
@@ -34,7 +34,7 @@ terraform {
 data "terraform_remote_state" "tf_remote_state_dev" {
   backend = "gcs"
   config = {
-    bucket = "p2m-tf-state-dev"
+    bucket = "fitcentive-tf-state-dev"
     prefix = "terraform/state"
   }
 }
@@ -42,7 +42,7 @@ data "terraform_remote_state" "tf_remote_state_dev" {
 data "terraform_remote_state" "tf_remote_state_nonproduction" {
   backend = "gcs"
   config = {
-    bucket = "p2m-tf-state-nonproduction"
+    bucket = "fitcentive-tf-state-nonproduction"
     prefix = "terraform/state"
   }
 }

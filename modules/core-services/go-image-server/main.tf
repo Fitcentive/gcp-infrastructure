@@ -8,7 +8,7 @@ resource "null_resource" "push-custom-image-service-image-to-gcr" {
   provisioner "local-exec" {
     command = <<-EOT
       docker build -t ${var.namespace}:latest -t ${var.namespace}:1.0 ${path.module}/resources/
-      docker tag ${var.namespace}:1.0 gcr.io/place-2-meet-dev/${var.namespace}:1.0
+      docker tag ${var.namespace}:1.0 gcr.io/${var.project_id}/${var.namespace}:1.0
       docker push gcr.io/${var.project_id}/${var.namespace}:1.0
     EOT
   }
