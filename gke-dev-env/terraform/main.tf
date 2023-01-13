@@ -16,22 +16,12 @@ module "cloudsql-dev-env" {
   project_id = local.project_id
 }
 
-module "gke-dev-env" {
-  source = "../../modules/kubernetes-cluster"
-
-  project_id = local.project_id
-  region     = local.region
-  zone       = local.zone
-}
 
 module "gke-dev-functional-namespaces" {
   source = "../../modules/kubernetes-namespaces"
 
   kubernetes_namespaces = local.service_namespaces
 
-  depends_on = [
-    module.gke-dev-env
-  ]
 }
 
 module "gke-dev-shared-resources" {
@@ -49,9 +39,6 @@ module "gke-dev-shared-resources" {
 module "dev-monitoring-stack" {
   source = "../../modules/monitoring-stack"
 
-  depends_on = [
-    module.gke-dev-env
-  ]
 }
 
 # Avoiding NGINX controller for now as there seems to be no easy way to bind to Static IP
@@ -61,20 +48,13 @@ module "dev-nginx-ingress-controller" {
   project_id = local.project_id
   region     = local.region
 
-  regional_static_ip_address = module.gke-dev-env.gke_regional_static_ip_address
+  regional_static_ip_address = data.terraform_remote_state.tf_remote_state_nonproduction.outputs.gke_dev_gke_regional_static_ip_address
 
-  depends_on = [
-    module.gke-dev-env
-  ]
 }
 
 # To handle provisioning of TLS certs
 module "dev-cert-manager" {
   source = "../../modules/cert-manager"
-
-  depends_on = [
-    module.gke-dev-env
-  ]
 }
 
 # K8s Keycloak server deployment
@@ -88,11 +68,10 @@ module "dev-keycloak-server" {
   cloud_sql_instance_connection_name = module.cloudsql-dev-env.cloudsql_instance_connection_name
   cloudsql_service_account_key       = module.cloudsql-dev-env.cloudsql_service_account_key
 
-  global_static_ip_name = module.gke-dev-env.gke_regional_static_ip_name
-  ssl_policy_name       = module.gke-dev-env.gke_ssl_policy_name
+  global_static_ip_name = data.terraform_remote_state.tf_remote_state_nonproduction.outputs.gke_dev_gke_regional_static_ip_name
+  ssl_policy_name       = data.terraform_remote_state.tf_remote_state_nonproduction.outputs.gke_dev_gke_ssl_policy_name
 
   depends_on = [
-    module.gke-dev-env,
     module.cloudsql-dev-env,
   ]
 }
@@ -104,9 +83,6 @@ module "dev-mailhog-server" {
   project_id = local.project_id
   region     = local.region
 
-  depends_on = [
-    module.gke-dev-env
-  ]
 }
 
 
@@ -118,9 +94,6 @@ module "dev-image-server" {
   region         = local.region
   service_secret = random_string.image-service-secret.result
 
-  depends_on = [
-    module.gke-dev-env
-  ]
 }
 
 module "dev-image-proxy-server" {
@@ -130,9 +103,6 @@ module "dev-image-proxy-server" {
   region         = local.region
   service_secret = random_string.image-service-secret.result
 
-  depends_on = [
-    module.gke-dev-env
-  ]
 }
 # ------------------------------------------------------------------------
 

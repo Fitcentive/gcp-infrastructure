@@ -45,3 +45,12 @@ module "dev-firebase-project" {
   ios_display_name     = "Fitcentive iOS Dev"
   web_display_name     = "Fitcentive Web Dev"
 }
+
+module "gke-dev-env" {
+  source = "../../modules/kubernetes-cluster"
+
+  project_id = local.project_id
+  region     = local.region
+  zone       = local.zone
+}
+

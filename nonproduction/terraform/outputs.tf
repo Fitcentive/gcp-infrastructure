@@ -24,3 +24,45 @@ output "firebase_firestore_database_url" {
   value       = module.dev-firebase-project.firestore_database_url
   description = "Firebase firestore database URL"
 }
+
+output "gke_dev_kubernetes_cluster_name" {
+  value       = module.gke-dev-env.kubernetes_cluster_name
+  description = "GKE Cluster Name"
+}
+
+output "gke_dev_kubernetes_client_cert" {
+  value       = module.gke-dev-env.kubernetes_client_cert
+  description = "GKE Cluster Cert"
+}
+
+output "gke_dev_kubernetes_client_key" {
+  value       = module.gke-dev-env.kubernetes_client_key
+  description = "GKE Cluster Client key"
+  sensitive   = true
+}
+
+output "gke_dev_kubernetes_cluster_ca_certificate" {
+  value       = module.gke-dev-env.kubernetes_cluster_ca_certificate
+  description = "GKE Cluster CA Certificate"
+  sensitive   = true
+}
+
+output "gke_dev_kubernetes_cluster_host" {
+  value       = module.gke-dev-env.kubernetes_cluster_host
+  description = "GKE Cluster Host"
+}
+
+output "gke_dev_gke_regional_static_ip_name" {
+  value       = module.gke-dev-env.gke_regional_static_ip_name
+  description = "GKE Regional Static IP name"
+}
+
+output "gke_dev_gke_regional_static_ip_address" {
+  value       = module.gke-dev-env.gke_regional_static_ip_address
+  description = "GKE Regional Static IP address"
+}
+
+output "gke_dev_gke_ssl_policy_name" {
+  value       = module.gke-dev-env.gke_ssl_policy_name
+  description = "GKE SSL Policy name"
+}
