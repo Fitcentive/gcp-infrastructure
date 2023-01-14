@@ -16,6 +16,29 @@ module "user-service-db" {
   namespace                          = var.namespace
 }
 
+resource "kubernetes_config_map_v1" "service-account-config-map" {
+  metadata {
+    name = "${var.service_name}-service-account"
+    namespace = var.namespace
+  }
+
+  data = {
+    "key.json" = base64decode(module.pubsub-service-account.service_account_key)
+  }
+}
+
+# Create and push custom gcloud docker image to publish to topic
+resource "null_resource" "push_custom_gcloud_user_docker_image_publish_to_pubsubs" {
+  provisioner "local-exec" {
+    command = <<-EOT
+      docker build -t gcloud-user-cron-pubsub-image:latest -t gcloud-user-cron-pubsub-image:1.0 ${path.module}/resources/
+      docker tag gcloud-user-cron-pubsub-image:1.0 gcr.io/${var.project_id}/gcloud-user-cron-pubsub-image:1.0
+      docker push gcr.io/${var.project_id}/gcloud-user-cron-pubsub-image:1.0
+    EOT
+  }
+}
+
+
 # Note - AuraDB provisioned manually through https://console.neo4j.io, No terraform provider yet
 resource "kubernetes_secret" "neo4j-secrets" {
   metadata {

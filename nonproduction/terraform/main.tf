@@ -39,11 +39,11 @@ module "dev-firebase-project" {
 
   project_id           = local.project_id
   default_location     = local.firebase_location
-  android_display_name = "Fitcentive Android Dev"
-  android_package_name = "io.fitcentive.flutter_app"
-  ios_bundle_id        = "io.fitcentive.flutterApp"
   ios_display_name     = "Fitcentive iOS Dev"
+  android_display_name = "Fitcentive Android Dev"
   web_display_name     = "Fitcentive Web Dev"
+  ios_bundle_id        = "io.fitcentive.flutterApp"
+  android_package_name = "io.fitcentive.flutter_app"
 
   # Depends on service account module as the google-beta provider uses created service account as credentials via remote state
   # The firebase provider cannot authenticate via default creds, only service_account for now
