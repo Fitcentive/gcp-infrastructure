@@ -197,7 +197,11 @@ module "dev-auth-service" {
   source = "../../modules/core-services/auth-service"
 
   project_id                     = local.project_id
-  keycloak_admin_client_password = module.dev-keycloak-server.keycloak_admin_client_password
+  keycloak_admin_client_password = local.keycloak_admin_client_password
+  keycloak_admin_client_id       = local.keycloak_admin_client_id
+  keycloak_admin_client_username = local.keycloak_admin_client_username
+  keycloak_admin_client_secret   = local.keycloak_admin_client_secret
+
 
   depends_on = [
     module.gke-dev-functional-namespaces,

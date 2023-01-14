@@ -10,9 +10,9 @@ resource "kubernetes_secret" "keycloak-admin-cli-secrets" {
   }
 
   data = {
-    KEYCLOAK_ADMIN_CLIENT_ID           = "admin-cli"
-    KEYCLOAK_ADMIN_CLIENT_SECRET       = random_password.keycloak-client-secret.result
-    KEYCLOAK_ADMIN_USERNAME            = "admin"
-    KEYCLOAK_ADMIN_PASSWORD            = var.keycloak_admin_client_password
+    KEYCLOAK_ADMIN_CLIENT_ID     = var.keycloak_admin_client_id
+    KEYCLOAK_ADMIN_CLIENT_SECRET = var.keycloak_admin_client_secret
+    KEYCLOAK_ADMIN_USERNAME      = var.keycloak_admin_client_username
+    KEYCLOAK_ADMIN_PASSWORD      = var.keycloak_admin_client_password
   }
 }
