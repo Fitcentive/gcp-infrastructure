@@ -16,6 +16,7 @@ locals {
     "user",
     "social",
     "public-gateway",
+    "discover",
   ]
 
   neo4j_db_name  = "FitcentiveGraphDb"

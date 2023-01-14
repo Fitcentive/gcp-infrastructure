@@ -141,6 +141,25 @@ module "dev-social-service" {
 
 }
 
+module "dev-discover-service" {
+  source = "../../modules/core-services/discover-service"
+
+  project_id = local.project_id
+
+  neo4j_db_name  = local.neo4j_db_name
+  neo4j_password = local.neo4j_password
+  neo4j_uri      = local.neo4j_uri
+  neo4j_username = local.neo4j_username
+
+  cloud_sql_instance_connection_name = module.cloudsql-dev-env.cloudsql_instance_connection_name
+  cloud_sql_instance_name            = module.cloudsql-dev-env.cloudsql_instance_name
+  cloudsql_service_account_key       = module.cloudsql-dev-env.cloudsql_service_account_key
+
+  depends_on = [
+    module.gke-dev-functional-namespaces,
+  ]
+}
+
 module "dev-user-service" {
   source = "../../modules/core-services/user-service"
 
