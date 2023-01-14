@@ -5,6 +5,10 @@ resource "google_sql_database_instance" "gke-dev-env-cloud-sql-instance" {
   region           = var.region
   database_version = "POSTGRES_14"
   settings {
+    database_flags {
+      name  = "max_connections"
+      value = "50"
+    }
     tier = "db-f1-micro"
   }
 

@@ -59,5 +59,7 @@ module "gke-dev-env" {
   project_id = local.project_id
   region     = local.region
   zone       = local.zone
+
+  gke_num_nodes = 2
 }
 
