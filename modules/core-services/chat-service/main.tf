@@ -23,7 +23,7 @@ resource "kubernetes_secret" "chat-cloudsql-database-url" {
   }
 
   data = {
-    DATABASE_URL = "ecto://${module.chat-service-db.cloudsql_instance_username}:${module.chat-service-db.cloudsql_instance_password}}@localhost:5432/${module.chat-service-db.cloudsql_database_name}"
+    DATABASE_URL = "ecto://${module.chat-service-db.cloudsql_instance_username}:${module.chat-service-db.cloudsql_instance_password}@localhost:5432/${module.chat-service-db.cloudsql_database_name}"
   }
 
 }
