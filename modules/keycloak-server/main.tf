@@ -172,3 +172,8 @@ resource "kubernetes_ingress_v1" "keycloak-ingress" {
 #    - auth.fitcentive.xyz
 #YAML
 #}
+
+resource "random_password" "keycloak-admin-pwd" {
+  length  = 30
+  special = false
+}

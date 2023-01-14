@@ -20,8 +20,8 @@ locals {
   ]
 
   neo4j_db_name  = "FitcentiveGraphDb"
-  neo4j_password = "Ik6dX_r5t1UQWe6mU89gWUVUiX13cqHsztdEL8mEv5M"
-  neo4j_uri      = "neo4j+s://c705512b.databases.neo4j.io"
+  neo4j_password = "svcX494RgXZQGyCm4bDbrF2cbzOPDkKUUnS_3lnJJ9M"
+  neo4j_uri      = "neo4j+s://50af67f7.databases.neo4j.io"
   neo4j_username = "neo4j"
 
   # Note - the following value is fetched from https://console.firebase.google.com/u/1/project/fitcentive-dev/settings/serviceaccounts/adminsdk

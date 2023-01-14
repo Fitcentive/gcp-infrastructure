@@ -192,3 +192,14 @@ module "dev-chat-service" {
     module.gke-dev-functional-namespaces,
   ]
 }
+
+module "dev-auth-service" {
+  source = "../../modules/core-services/auth-service"
+
+  project_id                     = local.project_id
+  keycloak_admin_client_password = module.dev-keycloak-server.keycloak_admin_client_password
+
+  depends_on = [
+    module.gke-dev-functional-namespaces,
+  ]
+}

@@ -53,7 +53,7 @@ spec:
     # before moving to production
     # server:      https://acme-staging-v02.api.letsencrypt.org/directory  # < use this staging issuer when testing to avoid hitting rate limits on prod (50 per week).
     # prod-server: https://acme-v02.api.letsencrypt.org/directory  # < use this staging issuer when testing to avoid hitting rate limits on prod (50 per week).
-    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       # Secret resource used to store the account's private key.
       name: cluster-issuer-account-key
