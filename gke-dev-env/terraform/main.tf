@@ -70,6 +70,7 @@ module "dev-keycloak-server" {
 
   global_static_ip_name = data.terraform_remote_state.tf_remote_state_nonproduction.outputs.gke_dev_gke_regional_static_ip_name
   ssl_policy_name       = data.terraform_remote_state.tf_remote_state_nonproduction.outputs.gke_dev_gke_ssl_policy_name
+  keycloak_server_host  = "auth.fitcentive.xyz"
 
   depends_on = [
     module.cloudsql-dev-env,
@@ -187,6 +188,16 @@ module "dev-chat-service" {
   cloud_sql_instance_connection_name = module.cloudsql-dev-env.cloudsql_instance_connection_name
   cloud_sql_instance_name            = module.cloudsql-dev-env.cloudsql_instance_name
   cloudsql_service_account_key       = module.cloudsql-dev-env.cloudsql_service_account_key
+
+  apple_auth_key_id        = local.apple_auth_key_id
+  apple_auth_public_key    = local.apple_auth_public_key
+  auth_server_url          = local.auth_server_url
+  facebook_auth_key_id     = local.facebook_auth_key_id
+  facebook_auth_public_key = local.facebook_auth_public_key
+  google_auth_key_id       = local.google_auth_key_id
+  google_auth_public_key   = local.google_auth_public_key
+  native_auth_key_id       = local.native_auth_key_id
+  native_auth_public_key   = local.native_auth_public_key
 
   depends_on = [
     module.gke-dev-functional-namespaces,

@@ -52,6 +52,5 @@ variable "ssl_policy_name" {
 }
 
 variable "keycloak_server_host" {
-  default     = "auth.fitcentive.xyz"
   description = "Host url of keycloak server"
 }

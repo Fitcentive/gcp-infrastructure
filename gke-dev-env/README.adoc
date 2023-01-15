@@ -36,7 +36,12 @@ include::./terraform/locals-data.tf[lines=27..31]
 ----
 include::./terraform/locals-data.tf[lines=34..41]
 ----
-
-4. Run `tf apply` again to apply the changes
+4. Navigate to the keycloak server and fetch the required info in the quoted block below
++
+[source,hcl]
+----
+include::./terraform/locals-data.tf[lines=44..64]
+----
+5. Run `tf apply` again to apply the changes
     - Ensure the `auth-service` secrets are updated
     - Might require a manual pod restart to ensure new secret is picked up
