@@ -1,13 +1,22 @@
+resource "random_string" "cloud-sql-root-password" {
+  length  = 20
+  special = true
+}
+
 # Google Cloud SQL instance
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
 resource "google_sql_database_instance" "gke-dev-env-cloud-sql-instance" {
   name             = "gke-dev-env-cloud-sql-instance"
   region           = var.region
   database_version = "POSTGRES_14"
+
+  # Note on root password - tf deletes this user on instance creation, so it is useless. Need to create users explicitly
+  root_password    = random_string.cloud-sql-root-password.result
+
   settings {
     database_flags {
       name  = "max_connections"
-      value = "50"
+      value = var.cloud_sql_max_connections
     }
     tier = "db-f1-micro"
   }

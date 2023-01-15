@@ -158,6 +158,7 @@ module "dev-discover-service" {
 
   depends_on = [
     module.gke-dev-functional-namespaces,
+    module.cloudsql-dev-env,
   ]
 }
 
@@ -177,6 +178,7 @@ module "dev-user-service" {
 
   depends_on = [
     module.gke-dev-functional-namespaces,
+    module.cloudsql-dev-env,
   ]
 }
 
@@ -201,6 +203,7 @@ module "dev-chat-service" {
 
   depends_on = [
     module.gke-dev-functional-namespaces,
+    module.cloudsql-dev-env,
   ]
 }
 

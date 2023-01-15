@@ -10,3 +10,8 @@ variable "region" {
 variable "project_id" {
   description = "GCP Project Id"
 }
+
+variable "cloud_sql_max_connections" {
+  default = "100"
+  description = "Max db connections to CloudSql instance"
+}
