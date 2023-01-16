@@ -17,6 +17,8 @@ locals {
     "social",
     "public-gateway",
     "discover",
+    # Web namespace used for flutter-web-app
+    "web"
   ]
 
   # Neo4j Config

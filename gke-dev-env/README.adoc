@@ -45,3 +45,8 @@ include::./terraform/locals-data.tf[lines=44..64]
 5. Run `tf apply` again to apply the changes
     - Ensure the `auth-service` secrets are updated
     - Might require a manual pod restart to ensure new secret is picked up
+
+
+== FAQS
+1. CORS issue with authentictation
+    - Add web origin to `Web origins` section of `webapp` client for the appropriate keycloak realm
