@@ -17,6 +17,7 @@ locals {
     "social",
     "public-gateway",
     "discover",
+    "meetup",
     # Web namespace used for flutter-web-app
     "web"
   ]
