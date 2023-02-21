@@ -36,12 +36,12 @@ module "gke-dev-shared-resources" {
 }
 
 # Could enable prometheus/grafana via publicURLs with additional config if needed
+# Consider disabling to save resources?
 module "dev-monitoring-stack" {
   source = "../../modules/monitoring-stack"
 
 }
 
-# Avoiding NGINX controller for now as there seems to be no easy way to bind to Static IP
 module "dev-nginx-ingress-controller" {
   source = "../../modules/nginx-ingress-controller"
 
@@ -224,6 +224,21 @@ module "dev-auth-service" {
 
 module "dev-meetup-service" {
   source = "../../modules/core-services/meetup-service"
+
+  project_id = local.project_id
+
+  cloud_sql_instance_connection_name = module.cloudsql-dev-env.cloudsql_instance_connection_name
+  cloud_sql_instance_name            = module.cloudsql-dev-env.cloudsql_instance_name
+  cloudsql_service_account_key       = module.cloudsql-dev-env.cloudsql_service_account_key
+
+  depends_on = [
+    module.gke-dev-functional-namespaces,
+    module.cloudsql-dev-env,
+  ]
+}
+
+module "dev-diary-service" {
+  source = "../../modules/core-services/diary-service"
 
   project_id = local.project_id
 
