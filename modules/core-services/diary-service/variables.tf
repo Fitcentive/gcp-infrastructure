@@ -36,3 +36,7 @@ variable "fatsecret_client_id" {
 variable "fatsecret_client_secret" {
   description = "Client Secret for Fatsecret API"
 }
+
+variable "fatsecret_api_host" {
+  description = "API host for Fatsecret API"
+}

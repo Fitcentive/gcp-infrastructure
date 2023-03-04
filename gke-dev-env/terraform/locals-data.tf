@@ -70,5 +70,6 @@ locals {
   # Fatsecret API detail
   fatsecret_client_secret = "5dfd8128ad9241bfa64fc7f793e84775"
   fatsecret_client_id     = "305dd9e4c424408982f069ae60453cdc"
+  fatsecret_api_host      = "https://platform.fatsecret.com/rest/server.api"
 
 }

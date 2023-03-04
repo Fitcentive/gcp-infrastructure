@@ -46,7 +46,7 @@ include::./terraform/locals-data.tf[lines=44..64]
 +
 [source,hcl]
 ----
-include::./terraform/locals-data.tf[lines=70..73]
+include::./terraform/locals-data.tf[lines=70..74]
 ----
 6. Run `tf apply` again to apply the changes
     - Ensure the `auth-service` secrets are updated

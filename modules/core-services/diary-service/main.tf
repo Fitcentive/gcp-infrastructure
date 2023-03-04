@@ -18,5 +18,6 @@ resource "kubernetes_secret" "diary-service-fatsecret-credentials" {
   data = {
     FATSECRET_CLIENT_ID     = var.fatsecret_client_id
     FATSECRET_CLIENT_SECRET = var.fatsecret_client_secret
+    FATSECRET_API_HOST      = var.fatsecret_api_host
   }
 }
