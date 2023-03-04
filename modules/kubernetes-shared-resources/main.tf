@@ -9,8 +9,8 @@ terraform {
 
 # Random service secret to be used between services in the GKE cluster
 resource "random_string" "internal-service-secret" {
-  length           = 32
-  special          = false
+  length  = 32
+  special = false
 }
 
 resource "kubernetes_secret" "internal-service-secret" {

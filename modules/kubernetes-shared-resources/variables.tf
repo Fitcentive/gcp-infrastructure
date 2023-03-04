@@ -4,6 +4,6 @@ variable "service_namespaces" {
 }
 
 variable "image_service_token" {
-  type = string
+  type        = string
   description = "Image service opaque token"
 }

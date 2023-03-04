@@ -27,7 +27,7 @@ module "gke-dev-functional-namespaces" {
 module "gke-dev-shared-resources" {
   source = "../../modules/kubernetes-shared-resources"
 
-  service_namespaces = local.service_namespaces
+  service_namespaces  = local.service_namespaces
   image_service_token = random_string.image-service-secret.result
 
   depends_on = [
@@ -113,8 +113,8 @@ module "dev-notification-service" {
 
   project_id = local.project_id
   # Note - this output is empty, seems like it need enabling in Firebase console. Perhaps it is not needed though?
-  firebase_database_url   = data.terraform_remote_state.tf_remote_state_nonproduction.outputs.firebase_firestore_database_url
-  cloud_sql_instance_name = module.cloudsql-dev-env.cloudsql_instance_name
+  firebase_database_url              = data.terraform_remote_state.tf_remote_state_nonproduction.outputs.firebase_firestore_database_url
+  cloud_sql_instance_name            = module.cloudsql-dev-env.cloudsql_instance_name
   cloud_sql_instance_connection_name = module.cloudsql-dev-env.cloudsql_instance_connection_name
   cloudsql_service_account_key       = module.cloudsql-dev-env.cloudsql_service_account_key
 
@@ -245,6 +245,9 @@ module "dev-diary-service" {
   cloud_sql_instance_connection_name = module.cloudsql-dev-env.cloudsql_instance_connection_name
   cloud_sql_instance_name            = module.cloudsql-dev-env.cloudsql_instance_name
   cloudsql_service_account_key       = module.cloudsql-dev-env.cloudsql_service_account_key
+
+  fatsecret_client_id     = local.fatsecret_client_id
+  fatsecret_client_secret = local.fatsecret_client_secret
 
   depends_on = [
     module.gke-dev-functional-namespaces,

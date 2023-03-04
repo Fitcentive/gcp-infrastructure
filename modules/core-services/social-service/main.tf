@@ -14,9 +14,9 @@ resource "kubernetes_secret" "neo4j-secrets" {
   }
 
   data = {
-    NEO4J_URI          = var.neo4j_uri
-    NEO4J_USERNAME     = var.neo4j_username
-    NEO4J_PASSWORD     = var.neo4j_password
+    NEO4J_URI           = var.neo4j_uri
+    NEO4J_USERNAME      = var.neo4j_username
+    NEO4J_PASSWORD      = var.neo4j_password
     NEO4J_INSTANCE_NAME = var.neo4j_db_name
   }
 }

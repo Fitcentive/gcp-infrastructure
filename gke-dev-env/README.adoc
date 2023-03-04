@@ -42,7 +42,13 @@ include::./terraform/locals-data.tf[lines=34..41]
 ----
 include::./terraform/locals-data.tf[lines=44..64]
 ----
-5. Run `tf apply` again to apply the changes
+5. https://platform.fatsecret.com/api/Default.aspx?screen=myc[Navigate to the Fatsecret UI in the browser] and fetch clientId/clientSecret and update below refernced values
++
+[source,hcl]
+----
+include::./terraform/locals-data.tf[lines=70..73]
+----
+6. Run `tf apply` again to apply the changes
     - Ensure the `auth-service` secrets are updated
     - Might require a manual pod restart to ensure new secret is picked up
 

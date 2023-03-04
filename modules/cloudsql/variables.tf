@@ -12,6 +12,6 @@ variable "project_id" {
 }
 
 variable "cloud_sql_max_connections" {
-  default = "100"
+  default     = "100"
   description = "Max db connections to CloudSql instance"
 }

@@ -28,3 +28,11 @@ variable "cloud_sql_instance_connection_name" {
 variable "cloudsql_service_account_key" {
   description = "Base64 version of service account key file for CloudSql"
 }
+
+variable "fatsecret_client_id" {
+  description = "Client ID for Fatsecret API"
+}
+
+variable "fatsecret_client_secret" {
+  description = "Client Secret for Fatsecret API"
+}

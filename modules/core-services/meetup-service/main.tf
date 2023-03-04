@@ -18,7 +18,7 @@ module "meetup-service-db" {
 
 resource "kubernetes_config_map_v1" "service-account-config-map" {
   metadata {
-    name = "${var.service_name}-service-account"
+    name      = "${var.service_name}-service-account"
     namespace = var.namespace
   }
 

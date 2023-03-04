@@ -11,7 +11,7 @@ resource "google_sql_database_instance" "gke-dev-env-cloud-sql-instance" {
   database_version = "POSTGRES_14"
 
   # Note on root password - tf deletes this user on instance creation, so it is useless. Need to create users explicitly
-  root_password    = random_string.cloud-sql-root-password.result
+  root_password = random_string.cloud-sql-root-password.result
 
   settings {
     database_flags {

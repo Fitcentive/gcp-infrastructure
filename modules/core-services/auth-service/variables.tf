@@ -21,11 +21,11 @@ variable "keycloak_admin_client_secret" {
 }
 
 variable "keycloak_admin_client_id" {
-  default = "admin-cli"
+  default     = "admin-cli"
   description = "Keycloak admin client ID"
 }
 
 variable "keycloak_admin_client_username" {
-  default = "admin"
+  default     = "admin"
   description = "Keycloak admin client username"
 }
