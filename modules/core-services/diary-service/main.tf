@@ -11,7 +11,7 @@ module "diary-service-db" {
 # Note - Fatsecret credentials provisioned manually through https://platform.fatsecret.com/api/Default.aspx?screen=myc, No terraform provider yet
 resource "kubernetes_secret" "diary-service-fatsecret-credentials" {
   metadata {
-    name      = "fatsecret-credentials"
+    name      = "${var.service_name}-fatsecret-credentials"
     namespace = var.namespace
   }
 
