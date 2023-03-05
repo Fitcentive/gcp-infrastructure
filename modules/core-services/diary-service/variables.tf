@@ -39,4 +39,10 @@ variable "fatsecret_client_secret" {
 
 variable "fatsecret_api_host" {
   description = "API host for Fatsecret API"
+  default     = "https://platform.fatsecret.com/rest/server.api"
+}
+
+variable "fatsecret_auth_host" {
+  description = "Auth host for Fatsecret API"
+  default     = "https://oauth.fatsecret.com/connect/token"
 }

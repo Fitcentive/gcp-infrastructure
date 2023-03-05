@@ -248,7 +248,6 @@ module "dev-diary-service" {
 
   fatsecret_client_id     = local.fatsecret_client_id
   fatsecret_client_secret = local.fatsecret_client_secret
-  fatsecret_api_host      = local.fatsecret_api_host
 
   depends_on = [
     module.gke-dev-functional-namespaces,
