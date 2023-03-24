@@ -37,10 +37,10 @@ module "gke-dev-shared-resources" {
 
 # Could enable prometheus/grafana via publicURLs with additional config if needed
 # Consider disabling to save resources?
-module "dev-monitoring-stack" {
-  source = "../../modules/monitoring-stack"
-
-}
+#module "dev-monitoring-stack" {
+#  source = "../../modules/monitoring-stack"
+#
+#}
 
 module "dev-nginx-ingress-controller" {
   source = "../../modules/nginx-ingress-controller"

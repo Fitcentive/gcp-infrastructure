@@ -60,6 +60,6 @@ module "gke-dev-env" {
   region     = local.region
   zone       = local.zone
 
-  gke_num_nodes = 2
+  gke_num_nodes = 1
 }
 
