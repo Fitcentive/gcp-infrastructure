@@ -1,7 +1,7 @@
 # This needs to be created manually using the GCP console and imported manually using the following command
-# tf import google_storage_bucket.terraform-remote-state-bucket fitcentive-dev/fitcentive-tf-state-nonproduction
+# tf import google_storage_bucket.terraform-remote-state-bucket fitcentive-dev-02/fitcentive-02-tf-state-nonproduction
 resource "google_storage_bucket" "terraform-nonproduction-remote-state-bucket" {
-  name          = "fitcentive-tf-state-nonproduction"
+  name          = "fitcentive-02-tf-state-nonproduction"
   force_destroy = false
   location      = local.region
   storage_class = "STANDARD"
@@ -12,7 +12,7 @@ resource "google_storage_bucket" "terraform-nonproduction-remote-state-bucket" {
 
 # Terraform state bucket for DEV environment
 resource "google_storage_bucket" "terraform-dev-remote-state-bucket" {
-  name          = "fitcentive-tf-state-dev"
+  name          = "fitcentive-02-tf-state-dev"
   force_destroy = false
   location      = local.region
   storage_class = "STANDARD"

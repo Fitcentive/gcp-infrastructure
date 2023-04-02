@@ -12,6 +12,10 @@ resource "google_sql_user" "cloudsql_user" {
   name     = var.namespace
   instance = var.cloud_sql_instance_name
   password = random_password.random-password.result
+
+  depends_on = [
+    google_sql_database.service-db
+  ]
 }
 
 resource "kubernetes_secret" "cloudsql-instance-credentials" {

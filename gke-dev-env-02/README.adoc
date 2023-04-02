@@ -35,13 +35,13 @@ include::./terraform/locals-data.tf[lines=31..35]
 +
 [source,hcl]
 ----
-include::./terraform/locals-data.tf[lines=34..41]
+include::./terraform/locals-data.tf[lines=38..45]
 ----
 . Navigate to the keycloak server and fetch the required info in the quoted block below
 +
 [source,hcl]
 ----
-include::./terraform/locals-data.tf[lines=44..64]
+include::./terraform/locals-data.tf[lines=48..68]
 ----
 . https://platform.fatsecret.com/api/Default.aspx?screen=myc[Navigate to the Fatsecret UI in the browser] and fetch clientId/clientSecret and update below referenced values
 +
@@ -55,7 +55,7 @@ include::./terraform/locals-data.tf[lines=70..73]
 
 
 == FAQS
-1. CORS issue with authentictation
+1. CORS issue with authentication
     - Add web origin to `Web origins` section of `webapp` client for the appropriate keycloak realm
 
 == Migrate between GCP environments
@@ -80,4 +80,17 @@ include::./terraform/locals-data.tf[lines=70..73]
 . Import GCS buckets that were exported previously
 . https://cloud.google.com/sql/docs/postgres/import-export/import-export-sql[Restore CloudSQL instance using the following docs]
 . Update flutter app GoogleServices credentials for push notifications
+
+== Instructions for migration of Keycloak data
+. Connect to the old `keycloak-helm-db` schema via IntelliJ
+. Export as SQL scripts - include create table expressions
+. Global replace `create table` with `create table if exists `
+. Global replace `create index` with `create index if exists `
+. Connect to the newly created `keycloak-helm-db` and execute the following commands against the `public` schema
+    - `drop schema public cascade`
+    - `create schema public`
+. Via IntelliJ, execute SQL scripts against the `public` schema in `keycloak-helm-db`
+    - Execute these scripts 3-4 times, until all data is inserted
+    - It is required to do it multiple times because some tables/expressions depend on others
+. If done correctly, Keycloak auth server will not ask you to reconfigure an admin password, and same values from previous keycloak server can be reused (includes clientId/publicKeys for realms as well)
 

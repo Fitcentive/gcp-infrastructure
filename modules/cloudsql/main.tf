@@ -22,7 +22,7 @@ resource "google_sql_database_instance" "gke-dev-env-cloud-sql-instance" {
   }
 
   # Set this to false if needed to destroy resource
-  deletion_protection = "true"
+  deletion_protection = "false"
 }
 
 resource "google_service_account" "cloudsql-service-account" {
