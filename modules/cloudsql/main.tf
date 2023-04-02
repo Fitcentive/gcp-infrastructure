@@ -21,6 +21,7 @@ resource "google_sql_database_instance" "gke-dev-env-cloud-sql-instance" {
     tier = "db-f1-micro"
   }
 
+  # Set this to false if needed to destroy resource
   deletion_protection = "true"
 }
 

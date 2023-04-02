@@ -8,7 +8,7 @@
 +
 [source,hcl]
 ----
-include::./terraform/locals-data.tf[lines=27..31]
+include::./terraform/locals-data.tf[lines=31..35]
 ----
 
 
@@ -19,16 +19,17 @@ include::./terraform/locals-data.tf[lines=27..31]
 
 
 == Post apply changes
-1. Navigate to the keycloak server and create a password for the admin account
+. Update Google Cloud domains to point to LoadBalancer Static IP address `nonproduction.outputs.gke_dev_gke_regional_static_ip_address`
+. Navigate to the keycloak server and create a password for the admin account
     - http://auth.fitcentive.xyz/auth
     - Keep track of this password!
-2. Navigate to the keycloak server, login as admin, and generate client-secret for `admin-cli` client in the `master` realm
+. Navigate to the keycloak server, login as admin, and generate client-secret for `admin-cli` client in the `master` realm
     - Login as admin to http://auth.fitcentive.xyz/auth
     - Navigate to the `master` realm
     - Navigate to clients and select the `admin-cli` client
     - Toggle client accessibility from `public` to `confidential`, hit save.
     - Navigate to the credentials tab and copy over the generated `client-secret`
-3. Navigate to `locals-data.tf` and update the values for the following keys based on the values from above
+. Navigate to `locals-data.tf` and update the values for the following keys based on the values from above
     - `keycloak_admin_client_secret`
     - `keycloak_admin_client_password`
 +
@@ -36,19 +37,19 @@ include::./terraform/locals-data.tf[lines=27..31]
 ----
 include::./terraform/locals-data.tf[lines=34..41]
 ----
-4. Navigate to the keycloak server and fetch the required info in the quoted block below
+. Navigate to the keycloak server and fetch the required info in the quoted block below
 +
 [source,hcl]
 ----
 include::./terraform/locals-data.tf[lines=44..64]
 ----
-5. https://platform.fatsecret.com/api/Default.aspx?screen=myc[Navigate to the Fatsecret UI in the browser] and fetch clientId/clientSecret and update below refernced values
+. https://platform.fatsecret.com/api/Default.aspx?screen=myc[Navigate to the Fatsecret UI in the browser] and fetch clientId/clientSecret and update below referenced values
 +
 [source,hcl]
 ----
 include::./terraform/locals-data.tf[lines=70..73]
 ----
-6. Run `tf apply` again to apply the changes
+. Run `tf apply` again to apply the changes
     - Ensure the `auth-service` secrets are updated
     - Might require a manual pod restart to ensure new secret is picked up
 
@@ -56,3 +57,25 @@ include::./terraform/locals-data.tf[lines=70..73]
 == FAQS
 1. CORS issue with authentictation
     - Add web origin to `Web origins` section of `webapp` client for the appropriate keycloak realm
+
+== Migrate between GCP environments
+. Backup existing CloudSQL instance
+    - Navigate to CloudSQL via GCP console
+    - Select `export`
+. Backup existing buckets in GCS
+    - Terraform state buckets
+    - `image-service-upload-images`
+    - `cloud-sql-pgdump`
+. Create new GCP project in the GCP console
+. Use gcloud to create new credentials via terminal.
+    - `gcloud auth application-default login`
+    - `gcloud auth login`
+    - `gcloud config configurations create fitcentive-xyz-dev`
+    - `gcloud config configurations activate fitcentive-xyz-dev`
+    - `gcloud config set project fitcentive-xyz-dev`
+    - `gcloud config list`
+. Follow README instructions
+. Import GCS buckets that were exported previously
+. https://cloud.google.com/sql/docs/postgres/import-export/import-export-sql[Restore CloudSQL instance using the following docs]
+. Update flutter app GoogleServices credentials for push notifications
+

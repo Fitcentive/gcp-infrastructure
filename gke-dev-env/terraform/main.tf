@@ -36,12 +36,22 @@ module "gke-dev-shared-resources" {
 }
 
 # Could enable prometheus/grafana via publicURLs with additional config if needed
-# Consider disabling to save resources?
+# Monitoring stack disabled to save on CPU/Mem resources
+# Node level metrics can be found in the GCP console at https://console.cloud.google.com/kubernetes/clusters/details/northamerica-northeast2-a/fitcentive-dev-gke/nodes?authuser=1&orgonly=true&project=fitcentive-dev&supportedpurview=organizationId,folder,project
+#
 #module "dev-monitoring-stack" {
 #  source = "../../modules/monitoring-stack"
 #
 #}
 
+#
+# ----------------------------------------------------------------
+# Sometimes, deleting a namespace is hard due to finalizers
+# In such situations, use the following
+# kubectl proxy
+# In another tab... do,
+# kubectl get ns nginx -o json | jq '.spec.finalizers=[]' | curl -X PUT http://localhost:8001/api/v1/namespaces/nginx/finalize -H "Content-Type: application/json" --data @-
+# ----------------------------------------------------------------
 module "dev-nginx-ingress-controller" {
   source = "../../modules/nginx-ingress-controller"
 
