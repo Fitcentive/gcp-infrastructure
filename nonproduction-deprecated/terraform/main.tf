@@ -26,6 +26,7 @@ resource "google_project_service" "gcp_services" {
   for_each = toset(local.gcp_service_list)
   project  = local.project_id
   service  = each.key
+  disable_dependent_services =  true
 }
 
 module "dev-terraform-service-account" {
