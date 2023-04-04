@@ -78,6 +78,9 @@ include::./terraform/locals-data.tf[lines=70..73]
     - `gcloud auth application-default login` - with the new GCP account
 . Follow README instructions
 . Import GCS buckets that were exported previously
+    - NOTE - Owing to differences in file-system between GCS and UNIX, folders might not show up on the mount despite existing in GCS
+    - Quick fix is to use `mkdir` to create all existing GCS "directories" so the mount is aware of files within them
+    - Elegant fix would be to further investigate the option `gcsfuse` provides `--implicit-dirs` - but this does not seem to work as expected
 . https://cloud.google.com/sql/docs/postgres/import-export/import-export-sql[Restore CloudSQL instance using the following docs]
 . Update flutter app GoogleServices credentials for push notifications
 
