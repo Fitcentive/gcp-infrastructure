@@ -96,4 +96,9 @@ include::./terraform/locals-data.tf[lines=70..73]
     - Execute these scripts 3-4 times, until all data is inserted
     - It is required to do it multiple times because some tables/expressions depend on others
 . If done correctly, Keycloak auth server will not ask you to reconfigure an admin password, and same values from previous keycloak server can be reused (includes clientId/publicKeys for realms as well)
+. **NOTE: Identity Providers for OIDC logins need to be reconfigured - ** For example, it might be required to update the client secret for the Google Identity Provider in the `GoogleAuth` realm.
+    - Find this value in the OIDC client provider settings portal.
+    - This is needed as secret values aren't automatically migrated over as part of above operations
+    - https://github.com/ChathuminaVimukthi/Keycloak-with-Apple-Signin#how-to-configure[Apple IdP configuration instructions]
+    - Re apply client secret for Facebook/Apple providers as well as Google provider
 
