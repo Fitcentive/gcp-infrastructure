@@ -6,6 +6,12 @@ module "pubsub-service-account" {
   service_name = var.service_name
 }
 
+resource "google_project_iam_member" "user-service-account-iam-member" {
+  project = var.project_id
+  role    = "roles/storage.objectAdmin"
+  member  = "serviceAccount:${module.pubsub-service-account.service_account_email_id}"
+}
+
 module "user-service-db" {
   source = "../../cloudsql-resources"
 
