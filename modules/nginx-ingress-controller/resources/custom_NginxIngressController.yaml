@@ -4,8 +4,8 @@ controller:
 defaultBackend:
   enabled: true
   image:
-    repository: gcr.io/${GCP_PROJECT_ID}/${HELM_NAME}-default-backend:1.0
-    tag: "latest"
+    repository: gcr.io/${GCP_PROJECT_ID}/${HELM_NAME}-default-backend
+    tag: "1.0"
     pullPolicy: Always
     readOnlyRootFilesystem: false
   port: 8080
