@@ -25,8 +25,8 @@ resource "helm_release" "nginx" {
   values = [
     sensitive(templatefile("${path.module}/resources/custom_NginxIngressController.yaml", {
       STATIC_LOAD_BALANCER_IP_ADDRESS = var.regional_static_ip_address,
-      GCP_PROJECT_ID = var.project_id,
-      HELM_NAME = var.helm_nginx_name,
+      GCP_PROJECT_ID                  = var.project_id,
+      HELM_NAME                       = var.helm_nginx_name,
     }))
   ]
 
