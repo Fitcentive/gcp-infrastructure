@@ -19,6 +19,7 @@ locals {
     "discover",
     "meetup",
     "diary",
+    "scheduler",
     # Web namespace used for flutter-web-app
     "web"
   ]
