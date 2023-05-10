@@ -49,6 +49,12 @@ include::./terraform/locals-data.tf[lines=48..68]
 ----
 include::./terraform/locals-data.tf[lines=70..73]
 ----
+. https://apps.admob.com/v2/apps/list[Navigate to the AdMob UI in the browser] and create/fetch the appropriate ad unit ids as needed
++
+[source,hcl]
+----
+include::./terraform/locals-data.tf[lines=75..77]
+----
 . Run `tf apply` again to apply the changes
     - Ensure the `auth-service` secrets are updated
     - Might require a manual pod restart to ensure new secret is picked up

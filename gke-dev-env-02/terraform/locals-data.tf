@@ -72,4 +72,8 @@ locals {
   fatsecret_client_secret = "5dfd8128ad9241bfa64fc7f793e84775"
   fatsecret_client_id     = "305dd9e4c424408982f069ae60453cdc"
 
+  # AdMob config
+  ad_unit_id_android = "ca-app-pub-3940256099942544/6300978111"
+  ad_unit_id_ios     = "ca-app-pub-3940256099942544/2934735716"
+
 }

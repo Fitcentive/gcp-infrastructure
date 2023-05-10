@@ -282,3 +282,17 @@ module "dev-scheduler-service" {
     module.cloudsql-dev-env,
   ]
 }
+
+module "dev-public-gateway-service" {
+  source = "../../modules/core-services/public-gateway-service"
+
+  project_id = local.project_id
+
+  ad_unit_id_android = local.ad_unit_id_android
+  ad_unit_id_ios     = local.ad_unit_id_ios
+
+  depends_on = [
+    module.gke-dev-functional-namespaces,
+    module.cloudsql-dev-env,
+  ]
+}
