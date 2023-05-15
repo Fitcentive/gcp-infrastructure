@@ -291,6 +291,10 @@ module "dev-public-gateway-service" {
   ad_unit_id_android = local.ad_unit_id_android
   ad_unit_id_ios     = local.ad_unit_id_ios
 
+  cloud_sql_instance_connection_name = module.cloudsql-dev-env.cloudsql_instance_connection_name
+  cloud_sql_instance_name            = module.cloudsql-dev-env.cloudsql_instance_name
+  cloudsql_service_account_key       = module.cloudsql-dev-env.cloudsql_service_account_key
+
   depends_on = [
     module.gke-dev-functional-namespaces,
     module.cloudsql-dev-env,
