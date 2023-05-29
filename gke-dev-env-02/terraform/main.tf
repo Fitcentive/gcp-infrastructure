@@ -39,10 +39,10 @@ module "gke-dev-shared-resources" {
 # Monitoring stack disabled to save on CPU/Mem resources
 # Node level metrics can be found in the GCP console at https://console.cloud.google.com/kubernetes/clusters/details/northamerica-northeast2-a/fitcentive-dev-gke/nodes?authuser=1&orgonly=true&project=fitcentive-dev&supportedpurview=organizationId,folder,project
 #
-#module "dev-monitoring-stack" {
-#  source = "../../modules/monitoring-stack"
-#
-#}
+module "dev-monitoring-stack" {
+  source = "../../modules/monitoring-stack"
+
+}
 
 #
 # ----------------------------------------------------------------

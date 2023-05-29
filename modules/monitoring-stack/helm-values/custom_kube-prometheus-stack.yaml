@@ -10,10 +10,10 @@ prometheus:
   prometheusSpec:
     resources:
       requests:
-        cpu: 250m
+        cpu: 100m
         memory: 500Mi
       limits:
-        cpu: 500m
+        cpu: 200m
         memory: 1Gi
 
     retention: 7d

@@ -18,7 +18,7 @@ resource "google_sql_database_instance" "gke-dev-env-cloud-sql-instance" {
       name  = "max_connections"
       value = var.cloud_sql_max_connections
     }
-    tier = "db-f1-micro"
+    tier = var.database_machine_tier
   }
 
   # Set this to false if needed to destroy resource
