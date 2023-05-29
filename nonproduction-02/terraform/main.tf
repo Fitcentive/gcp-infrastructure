@@ -62,7 +62,7 @@ module "gke-dev-env" {
   region     = local.region
   zone       = local.zone
 
-  gke_num_nodes = 1
+  gke_num_nodes = 2
 
   depends_on = [
     google_project_service.gcp_services,
