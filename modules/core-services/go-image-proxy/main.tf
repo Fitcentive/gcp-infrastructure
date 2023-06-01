@@ -57,7 +57,7 @@ resource "kubernetes_deployment_v1" "image-proxy-deployment" {
             }
             limits = {
               memory = "1024Mi"
-              cpu    = "250m"
+              cpu    = "500m"
             }
           }
           volume_mount {
