@@ -32,3 +32,66 @@ include::./terraform/provider.tf[lines=33..38]
     - https://console.firebase.google.com/u/4/project/fitcentive-dev-02/settings/general/web:MGE1ZGIyZjAtMjg3NS00NTI4LWI0YzAtMWE2NTZhYzYzMmJj[Go to the firebase console and copy over the web config for the web app] into the flutter_web_app
     - https://console.firebase.google.com/u/4/project/fitcentive-dev-02/settings/cloudmessaging/web:MGE1ZGIyZjAtMjg3NS00NTI4LWI0YzAtMWE2NTZhYzYzMmJj[Go to the firebase console and upload the APNS key for Apple push notifications]
     - https://console.firebase.google.com/u/4/project/fitcentive-dev-02/settings/cloudmessaging/web:MGE1ZGIyZjAtMjg3NS00NTI4LWI0YzAtMWE2NTZhYzYzMmJj[Go to the firebase console and generate key-pair for web push certificate] and copy it over into the `flutter_app`
+
+== Migrate between GCP environments
+. Backup existing CloudSQL instance
+- Navigate to CloudSQL via GCP console
+- Select `export`
+. Backup existing buckets in GCS
+- Terraform state buckets
+- `fitcentive-dev-03-image-service-upload-images`
+- `fitcentive-dev-03-cloud-sql-pgdump`
+. Create new GCP project in the GCP console
+. Use gcloud to create new credentials via terminal.
+- `gcloud auth login` - with the new GCP account
+- `gcloud config configurations create fitcentive-dev-03`
+- `gcloud config set account <emailId>@gmail.com`
+- `gcloud config set project fitcentive-dev-03`
+- `gcloud config configurations activate fitcentive-dev-03`
+- `gcloud config set compute/zone northamerica-northeast2-a`
+- `gcloud config list`
+- `gcloud auth application-default login` - with the new GCP account
+. Update project code to replace project name
+- For example, replace `fitcentive-dev-02` with `fitcentive-dev-03`
+. Follow README instructions for `Nonproduction` and `gke-dev-env` projects
+. Import GCS buckets that were exported previously
+- Import can be done by uploading folder/files from UI
+- NOTE - Owing to differences in file-system between GCS and UNIX, folders might not show up on the mount despite existing in GCS
+- Quick fix is to use `mkdir` to create all existing GCS "directories" so the mount is aware of files within them
+- Elegant fix would be to further investigate the option `gcsfuse` provides `--implicit-dirs` - but this does not seem to work as expected
+. https://cloud.google.com/sql/docs/postgres/import-export/import-export-sql#console_1[Restore CloudSQL instance using the following docs]
+. Update client secrets for Keycloak Identity Providers
+- Fetch Facebook app secret from Facebook developer UI
+- Fetch Google client secret from GCP APIs and Credentials UI
+- Fetch Apple client secret from downloaded file
+. Migrate keycloak data
+- Detailed instructions are given below
+. **Hack** - Copy over TLS cert manually via already applied YAML into different namespaces
+- This is done to avoid creating certificate issue requests against LetsEncrypt
+- LetsEncrypt has a very limited amount of certs per week
+- Once a TLS cert is created via ingress annotations, copy over the manifest definition and modify the `namespace` and other appropriate fields
+- Apply the modified definition via `kubectl` to ensure that a fresh certificate is not issued
+. Deploy all service manifests via `kubectl`
+- Knock off services by namespaces list
+. Update Keycloak `webapp` client config
+- The `webapp` clients for various identity providers need some additional config
+- To the `Web origins` config, add the app host url `https://app.fitcentive.xyz`
+To the `Redirect URLs` config, add the app host url `https://app.fitcentive.xyz/auth.html`
+- Ensure this is done for **all** identity providers (Native/Google/Facebook/Apple)
+
+
+=== Instructions for migration of Keycloak data
+. Connect to the old `keycloak-helm-db` schema via IntelliJ
+. Export as SQL scripts - include create table expressions
+. Global replace `create table` with `create table if not exists`
+. Global replace `create index` with `create index if not exists`
+. Via IntelliJ, execute SQL scripts against the `public` schema in `keycloak-helm-db`
+- Execute these scripts 3-4 times, until all data is inserted
+- Make sure it is executed on top of existing created definitions
+- It is required to do it multiple times because some tables/expressions depend on others
+. If done correctly, Keycloak auth server will not ask you to reconfigure an admin password, and same values from previous keycloak server can be reused (includes clientId/publicKeys for realms as well)
+. **NOTE: Identity Providers for OIDC logins need to be reconfigured - ** For example, it might be required to update the client secret for the Google Identity Provider in the `GoogleAuth` realm.
+- Find this value in the OIDC client provider settings portal.
+- This is needed as secret values aren't automatically migrated over as part of above operations
+- https://github.com/ChathuminaVimukthi/Keycloak-with-Apple-Signin#how-to-configure[Apple IdP configuration instructions]
+- Re apply client secret for Facebook/Apple providers as well as Google provider
