@@ -95,11 +95,9 @@ include::./terraform/locals-data.tf[lines=75..77]
 . Export as SQL scripts - include create table expressions
 . Global replace `create table` with `create table if exists `
 . Global replace `create index` with `create index if exists `
-. Connect to the newly created `keycloak-helm-db` and execute the following commands against the `public` schema
-    - `drop schema public cascade`
-    - `create schema public`
 . Via IntelliJ, execute SQL scripts against the `public` schema in `keycloak-helm-db`
     - Execute these scripts 3-4 times, until all data is inserted
+    - Make sure it is executed on top of existing created definitions
     - It is required to do it multiple times because some tables/expressions depend on others
 . If done correctly, Keycloak auth server will not ask you to reconfigure an admin password, and same values from previous keycloak server can be reused (includes clientId/publicKeys for realms as well)
 . **NOTE: Identity Providers for OIDC logins need to be reconfigured - ** For example, it might be required to update the client secret for the Google Identity Provider in the `GoogleAuth` realm.
