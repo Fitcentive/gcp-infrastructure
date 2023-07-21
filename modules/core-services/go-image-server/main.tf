@@ -17,7 +17,7 @@ resource "null_resource" "push-custom-image-service-image-to-gcr" {
 # Note - requires a file `status.png` in the bucket root to satisfy k8s health checks
 resource "google_storage_bucket" "image-service-upload-images-storage-bucket" {
   name          = var.image_service_bucket_name
-  force_destroy = false
+  force_destroy = true
   location      = var.region
   storage_class = "STANDARD"
   versioning {
