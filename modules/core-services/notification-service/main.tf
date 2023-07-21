@@ -43,3 +43,16 @@ resource "kubernetes_secret" "firebase-admin-service-account-credentials" {
     FIREBASE_APPLICATION_CREDENTIALS = base64decode(google_service_account_key.firebase-admin-service-account-key.private_key)
   }
 }
+
+resource "kubernetes_secret" "smtp-credentials" {
+  metadata {
+    name      = "smtp-credentials"
+    namespace = var.namespace
+  }
+  data = {
+    smtp_user     = var.smtp_user
+    smtp_password = var.smtp_password
+    smtp_host     = var.smtp_host
+    smtp_port     = var.smtp_port
+  }
+}

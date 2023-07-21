@@ -76,4 +76,12 @@ locals {
   ad_unit_id_android = "ca-app-pub-3940256099942544/6300978111"
   ad_unit_id_ios     = "ca-app-pub-3940256099942544/2934735716"
 
+  # MailJet SMTP config
+  mailjet_smtp_host = "in-v3.mailjet.com"
+  mailjet_smtp_port = "587"
+  # This value is the API key from mailjet - https://app.mailjet.com/account/relay
+  mailjet_smtp_user = "c97324bd1ac6e563eef5424c278d5d05"
+  # This value is the associated secret with the API key above - https://app.mailjet.com/account/relay
+  mailjet_smtp_password = "e6d38f5fedb15725a7e89db05fd7b32c"
+
 }

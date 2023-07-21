@@ -36,3 +36,19 @@ variable "cloud_sql_instance_connection_name" {
 variable "cloudsql_service_account_key" {
   description = "Base64 version of service account key file for CloudSql"
 }
+
+variable "smtp_user" {
+  description = "SMTP user credential"
+}
+
+variable "smtp_password" {
+  description = "SMTP user password"
+}
+
+variable "smtp_host" {
+  description = "SMTP server host"
+}
+
+variable "smtp_port" {
+  description = "SMTP server port"
+}

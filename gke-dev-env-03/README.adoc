@@ -55,6 +55,12 @@ include::./terraform/locals-data.tf[lines=70..73]
 ----
 include::./terraform/locals-data.tf[lines=75..77]
 ----
+. https://app.mailjet.com/dashboard[Navigate to the MailJet UI] and fetch the necessary config
++
+[source,hcl]
+----
+include::./terraform/locals-data.tf[lines=79..85]
+----
 . Run `tf apply` again to apply the changes
     - Ensure the `auth-service` secrets are updated
     - Might require a manual pod restart to ensure new secret is picked up

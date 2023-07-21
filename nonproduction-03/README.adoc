@@ -65,7 +65,7 @@ include::./terraform/provider.tf[lines=33..38]
 - Fetch Google client secret from GCP APIs and Credentials UI
 - Fetch Apple client secret from downloaded file
 . Migrate keycloak data
-- Detailed instructions are given below
+- Detailed instructions given below
 . **Hack** - Copy over TLS cert manually via already applied YAML into different namespaces
 - This is done to avoid creating certificate issue requests against LetsEncrypt
 - LetsEncrypt has a very limited amount of certs per week

@@ -132,6 +132,11 @@ module "dev-notification-service" {
 
   firebase_admin_service_account = local.firebase_admin_service_account
 
+  smtp_host     = local.mailjet_smtp_host
+  smtp_password = local.mailjet_smtp_password
+  smtp_port     = local.mailjet_smtp_port
+  smtp_user     = local.mailjet_smtp_user
+
   depends_on = [
     module.gke-dev-functional-namespaces,
     module.cloudsql-dev-env,
