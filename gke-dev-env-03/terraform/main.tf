@@ -305,3 +305,18 @@ module "dev-public-gateway-service" {
     module.cloudsql-dev-env,
   ]
 }
+
+module "dev-awards-service" {
+  source = "../../modules/core-services/awards-service"
+
+  project_id = local.project_id
+
+  cloud_sql_instance_connection_name = module.cloudsql-dev-env.cloudsql_instance_connection_name
+  cloud_sql_instance_name            = module.cloudsql-dev-env.cloudsql_instance_name
+  cloudsql_service_account_key       = module.cloudsql-dev-env.cloudsql_service_account_key
+
+  depends_on = [
+    module.gke-dev-functional-namespaces,
+    module.cloudsql-dev-env,
+  ]
+}
