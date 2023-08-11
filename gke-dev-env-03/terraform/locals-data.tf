@@ -31,7 +31,7 @@ locals {
   neo4j_uri      = "neo4j+s://50af67f7.databases.neo4j.io"
   neo4j_username = "neo4j"
 
-  # Note - the following value is fetched from https://console.firebase.google.com/u/1/project/fitcentive-dev/settings/serviceaccounts/adminsdk
+  # Note - the following value is fetched from https://console.firebase.google.com/u/1/project/fitcentive-dev-03/settings/serviceaccounts/adminsdk
   # This value is created when parent `nonproduction` project's `module.dev-firebase-project` is executed successfully
   # Refer to the README.adoc for more info on how to set this value appropriately
   firebase_admin_service_account = "firebase-adminsdk-j2shj"

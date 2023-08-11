@@ -1,4 +1,4 @@
-replicas: 1
+replicas: 2
 
 #resources:
 #   requests:
@@ -43,6 +43,14 @@ extraEnv: |
     value: "localhost"
   - name: DB_PORT
     value: "5432"
+  - name: JGROUPS_DISCOVERY_PROTOCOL
+    value: dns.DNS_PING
+  - name: JGROUPS_DISCOVERY_PROPERTIES
+    value: 'dns_query={{ include "keycloak.serviceDnsName" . }}'
+  - name: CACHE_OWNERS_COUNT
+    value: "2"
+  - name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
+    value: "2"
 
 extraEnvFrom: |
   - secretRef:
