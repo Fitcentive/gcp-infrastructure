@@ -17,6 +17,8 @@ module "cloudsql-dev-env" {
 }
 
 
+# Note - when deleting cloudSQl databases, we need to remove all role object dependencies first
+# Run drop schema public for all DBs prior to tf destroy
 module "gke-dev-functional-namespaces" {
   source = "../../modules/kubernetes-namespaces"
 

@@ -85,7 +85,8 @@ To the `Redirect URLs` config, add the app host url `https://app.fitcentive.xyz/
 . Export as SQL scripts - include create table expressions
 . Global replace `create table` with `create table if not exists`
 . Global replace `create index` with `create index if not exists`
-. Via IntelliJ, execute SQL scripts against the `public` schema in `keycloak-helm-db`
+. Via IntelliJ, execute SQL scripts against the new `public` schema in `keycloak-helm-db`
+- Make sure to `drop schema public cascade` and then recreate it with `create schema public`
 - Execute these scripts 3-4 times, until all data is inserted
 - Make sure it is executed on top of existing created definitions
 - It is required to do it multiple times because some tables/expressions depend on others

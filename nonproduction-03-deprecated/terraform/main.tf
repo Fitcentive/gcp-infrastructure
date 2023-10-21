@@ -2,7 +2,7 @@
 # tf import google_storage_bucket.terraform-remote-state-bucket fitcentive-dev-02/fitcentive-02-tf-state-nonproduction
 resource "google_storage_bucket" "terraform-nonproduction-remote-state-bucket" {
   name          = "fitcentive-03-tf-state-nonproduction"
-  force_destroy = false
+  force_destroy = true
   location      = local.region
   storage_class = "STANDARD"
   versioning {
@@ -13,7 +13,7 @@ resource "google_storage_bucket" "terraform-nonproduction-remote-state-bucket" {
 # Terraform state bucket for DEV environment
 resource "google_storage_bucket" "terraform-dev-remote-state-bucket" {
   name          = "fitcentive-03-tf-state-dev"
-  force_destroy = false
+  force_destroy = true
   location      = local.region
   storage_class = "STANDARD"
   versioning {
